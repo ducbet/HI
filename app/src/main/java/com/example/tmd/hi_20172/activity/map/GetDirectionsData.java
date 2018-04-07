@@ -30,7 +30,7 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
     String url;
     String googleDirectionsData;
     String duration, distance;
-    LatLng latLng;
+    MapsActivity.GetDirectionCallBack callBack;
 
     // TODO: 06/04/2018
     public static PatternItem DOT = new Dot();
@@ -44,9 +44,7 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
     protected String doInBackground(Object... objects) {
         mMap = (GoogleMap) objects[0];
         url = (String) objects[1];
-        latLng = (LatLng) objects[2];
-
-
+        callBack = (MapsActivity.GetDirectionCallBack) objects[2];
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
             googleDirectionsData = downloadUrl.readUrl(url);
@@ -59,12 +57,11 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-
         List<String[]> directionsList;
         DataParser parser = new DataParser();
         directionsList = parser.parseDirections(s);
         displayDirection(directionsList);
-
+        callBack.success();
     }
 
     public void displayDirection(List<String[]> directionsList) {
@@ -73,7 +70,6 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
             int count = directionsList.get(i).length;
             List<Polyline> polylines = new ArrayList<>();
             PolylineOptions options = new PolylineOptions()
-
                     .width(10)
                     .startCap(new RoundCap())
                     .endCap(new RoundCap());
@@ -82,7 +78,7 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
                 // shorstest route
                 for (int j = 0; j < count; j++) {
                     options.addAll(PolyUtil.decode(directionsList.get(i)[j]))
-                            .color(Color.parseColor("#71FF0000"));
+                            .color(Color.RED);
                     Polyline polyline = mMap.addPolyline(options);
                     polyline.setClickable(true);
                     polylines.add(polyline);
@@ -90,7 +86,7 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
             } else {
                 for (int j = 0; j < count; j++) {
                     options.addAll(PolyUtil.decode(directionsList.get(i)[j]))
-                            .color(Color.parseColor("#71FF0000"))
+                            .color(Color.RED)
                             .pattern(alternativePattern);
                     Polyline polyline = mMap.addPolyline(options);
                     polyline.setClickable(true);

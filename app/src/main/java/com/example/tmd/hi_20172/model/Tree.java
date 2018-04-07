@@ -9,12 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by tmd on 06/04/2018.
  */
 
-public class Tree implements Parcelable {
+public class Tree extends StopOver implements Parcelable {
     private String id = "";
-    private LatLng latlon;
-    private int icon;
-    private String name;
-    private boolean choose;
+
 
     protected Tree(Parcel in) {
         id = in.readString();
