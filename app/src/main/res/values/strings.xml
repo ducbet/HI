@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">HI_20172</string>
+    <string name="title_remember_me">Tự động đăng nhập</string>
+    <string name="title_login">Đăng nhập</string>
+    <string name="title_register">Đăng ký</string>
+    <string name="title_slash">\t/\t</string>
+    <string name="action_forgot_password">Quên mật khẩu</string>
+    <string name="title_pass_word">Mật khẩu</string>
+    <string name="title_confirm_pass_word">Xác nhận mật khẩu</string>
+    <string name="title_phone_or_email">Email hoặc số điện thoại</string>
+
 </resources>
