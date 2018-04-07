@@ -39,14 +39,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.tmd.hi_20172.activity.map.GetDirectionsData.polylines;
+import static com.example.tmd.hi_20172.activity.map.GetDirectionsData.listRoutesPolylines;
+import static com.example.tmd.hi_20172.activity.map.GetDirectionsData.alternativePattern;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnPolylineClickListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
     public static final String TREE = "TREE";
@@ -131,6 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnPolylineClickListener(this);
 
         // TODO: 06/04/2018
         fakePosition();
@@ -166,6 +169,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_tree));
         tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_tree));
         tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_tree));
+        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_tree));
+        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_tree));
         for (Tree tree : tempTree) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(tree.getLatlon().latitude, tree.getLatlon().longitude))
@@ -196,12 +201,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             case R.id.bat_dau_tuoi:
                 // xoa duong di truoc day
-                if (polylines != null && !polylines.isEmpty()) {
-                    for (Polyline polyline : polylines) {
+                for (List<Polyline> route : listRoutesPolylines) {
+                    for (Polyline polyline : route) {
                         polyline.remove();
                     }
-                    polylines.clear();
                 }
+                listRoutesPolylines.clear();
                 dataTransfer = new Object[3];
                 List<Tree> stopover = new ArrayList(tour.values());
                 String url = getDirectionsUrl(stopover);
@@ -219,12 +224,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
         googleDirectionsUrl.append("&destination=" + stopover.get(stopover.size() - 1).getLatlon().latitude + "," + stopover.get(stopover.size() - 1).getLatlon().longitude);
+        googleDirectionsUrl.append("&alternatives=true");
         googleDirectionsUrl.append("&mode=walking");
-        googleDirectionsUrl.append("&waypoints=optimize:true");
-        for (Tree tree : stopover) {
-            googleDirectionsUrl.append("|via:" + tree.getLatlon().latitude + "," + tree.getLatlon().longitude);
+        if (stopover.size() > 1) {
+            googleDirectionsUrl.append("&waypoints=optimize:true");
+            for (Tree tree : stopover) {
+                googleDirectionsUrl.append("|via:" + tree.getLatlon().latitude + "," + tree.getLatlon().longitude);
+            }
         }
         googleDirectionsUrl.append("&key=" + "AIzaSyCAcfy-02UHSu2F6WeQ1rhQhkCr51eBL9g");
+        Log.e("MY_TAG", "getDirectionsUrl: " + googleDirectionsUrl.toString());
         return googleDirectionsUrl.toString();
     }
 
@@ -381,7 +390,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (marker.getSnippet().equals(MARKER_TREE)) {
+        if (marker.getSnippet() != null && marker.getSnippet().equals(MARKER_TREE)) {
             Intent intent = new Intent(this, TreeDetail.class);
             Tree tree = trees.get(marker.getId());
             if (tree != null) {
@@ -389,8 +398,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
             }
         }
-        return false;
+        return true;
     }
+
 
     // TODO: 06/04/2018
     @Override
@@ -425,6 +435,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(this, "" + tour.size(), Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+        // chuyen het ve ...
+        for (List<Polyline> route : listRoutesPolylines) {
+            for (Polyline polyline1 : route) {
+                polyline1.setPattern(alternativePattern);
+            }
+        }
+        // boi dam shortest route
+        for (int i = 0; i < listRoutesPolylines.size(); i++) {
+            for (Polyline polyline1 : listRoutesPolylines.get(i)) {
+                if (polyline1.getId().equals(polyline.getId())) {
+                    for (Polyline polyline2 : listRoutesPolylines.get(i)) {
+                        polyline2.setPattern(null);
+                    }
+                    return;
+                }
+            }
+        }
+    }
 }
 
 
