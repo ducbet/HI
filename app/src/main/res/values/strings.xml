@@ -8,5 +8,6 @@
     <string name="title_pass_word">Mật khẩu</string>
     <string name="title_confirm_pass_word">Xác nhận mật khẩu</string>
     <string name="title_phone_or_email">Email hoặc số điện thoại</string>
+    <string name="search_here">Tìm kiếm ở đây</string>
 
 </resources>

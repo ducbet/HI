@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class Tree extends StopOver implements Parcelable {
-    private String id = "";
+
 
 
     protected Tree(Parcel in) {
