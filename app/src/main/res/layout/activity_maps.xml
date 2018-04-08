@@ -60,8 +60,16 @@
                         android:src="@mipmap/ic_open_menu" />
                 </RelativeLayout>
 
+                <Button
+                    android:id="@+id/button_quick_choose"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_sheet_collapse_height"
+                    android:layout_alignParentBottom="true"
+                    android:background="@android:color/holo_blue_dark"
+                    android:onClick="onClick"
+                    android:text="Chọn nhanh"
+                    android:textSize="@dimen/sp_25" />
             </RelativeLayout>
-
 
             <android.support.design.widget.CoordinatorLayout
                 android:id="@+id/bottom_sheet"
