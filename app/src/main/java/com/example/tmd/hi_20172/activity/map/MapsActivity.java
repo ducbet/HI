@@ -83,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Map<String, StopOver> stopovers = new HashMap();
     Map<String, Marker> markers = new HashMap<>();
     List<StopOver> tour = new ArrayList<>();
-    private Button btnCalculate, btnCancel;
+    private Button btnCalculate, btnCancel, btnQuickChoose;
     private TextView txtRouteInfo;
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private View bottomSheet;
@@ -118,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         txtRouteInfo = findViewById(R.id.text_view_route_info);
         btnCancel = findViewById(R.id.button_cancel);
         btnCalculate = findViewById(R.id.button_calculate);
+        btnQuickChoose = findViewById(R.id.button_quick_choose);
         createBottomSheet();
         createNavigationView();
         setUpRecyclerView();
@@ -191,23 +192,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addTrees() {
         // TODO: 06/04/2018
         List<Tree> tempTree = new ArrayList<>();
-        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_tree, "Rau muong"));
-        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_tree, "Hoa hong"));
-        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_tree, "Cai cuc"));
-        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_tree, "Cay bang"));
-        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_tree, "Hoa dam but"));
-        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_tree, "Cay phuong"));
-        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_tree, "Cay da"));
-        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_tree, "Cay buoi"));
-        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_tree, "Hoa loa ken"));
-        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_tree, "Cay chanh"));
-        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_tree, "Cay gao"));
+        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_tree, "Rau muong", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_tree, "Hoa hong", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_tree, "Cai cuc", Tree.GREEN));
+        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_tree, "Cay bang", Tree.YELLOW));
+        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_tree, "Hoa dam but", Tree.GREEN));
+        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_tree, "Cay phuong", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_tree, "Cay da", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_tree, "Cay buoi", Tree.GREEN));
+        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_tree, "Hoa loa ken", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_tree, "Cay chanh", Tree.YELLOW));
+        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_tree, "Cay gao", Tree.RED));
         for (Tree tree : tempTree) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(tree.getLatlon().latitude, tree.getLatlon().longitude))
                     .snippet(MARKER_TREE)
-                    .icon(BitmapDescriptorFactory.fromResource(tree.getIcon()))
-                    .title(String.valueOf(tree.getId())));
+                    .icon(BitmapDescriptorFactory.fromResource(tree.getIcon())));
             tree.setId(marker.getId());
             stopovers.put(marker.getId(), tree);
             markers.put(marker.getId(), marker);
@@ -268,12 +268,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        btnQuickChoose.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        btnQuickChoose.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        if (IS_SPRAYING) {
+                        if (tour.isEmpty()) {
+                            btnQuickChoose.setVisibility(View.VISIBLE);
+                        } else {
                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         }
                         break;
@@ -327,6 +331,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 hideKeyboard();
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
+            case R.id.button_quick_choose:
+                int i = 0;
+                for (StopOver stopOver : stopovers.values()) {
+                    if (stopOver instanceof Tree && ((Tree) stopOver).getStatus() != Tree.GREEN) {
+                        handleStopoverClicked(stopOver);
+                    }
+                }
+                break;
         }
     }
 
@@ -377,7 +389,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleDirectionsUrl.append("&alternatives=true");
         googleDirectionsUrl.append("&mode=walking");
         if (route.size() > 1) {
-            googleDirectionsUrl.append("&waypoints=optimize:false");
+            googleDirectionsUrl.append("&waypoints=optimize:true");
             for (StopOver stopOver : route) {
                 googleDirectionsUrl.append("|via:" + stopOver.getLatlon().latitude + "," + stopOver.getLatlon().longitude);
             }
@@ -623,7 +635,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             if (IS_SPRAYING) {
                 btnCalculate.performClick();
-            } else {
+            } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         }
