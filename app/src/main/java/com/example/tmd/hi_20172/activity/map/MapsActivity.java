@@ -2,22 +2,36 @@ package com.example.tmd.hi_20172.activity.map;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
 import com.example.tmd.hi_20172.activity.TreeDetail;
+import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
+import com.example.tmd.hi_20172.model.Water;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,16 +53,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.tmd.hi_20172.activity.map.GetDirectionsData.polylines;
+import static com.example.tmd.hi_20172.activity.map.DataParser.routesInfo;
+import static com.example.tmd.hi_20172.activity.map.GetDirectionsData.listRoutesPolylines;
+import static com.example.tmd.hi_20172.activity.map.GetDirectionsData.alternativePattern;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
+    private static final String MARKER_WATER = "MARKER_WATER";
     public static final String TREE = "TREE";
     private static final int REQUEST_TREE_DETAIL_ACT = 15;
     private GoogleMap mMap;
@@ -61,10 +79,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double end_latitude, end_longitude;
 
     // TODO: 06/04/2018
-    Map<String, Tree> trees = new HashMap();
+    Map<String, StopOver> stopovers = new HashMap();
     Map<String, Marker> markers = new HashMap<>();
-    Map<String, Tree> tour = new HashMap<>();
-    private Button btnBatDauTuoi;
+    List<StopOver> tour = new ArrayList<>();
+    private Button btnCalculate, btnCancel;
+    private TextView txtRouteInfo;
+    private BottomSheetBehavior<View> bottomSheetBehavior;
+    private View bottomSheet;
+    private RecyclerView recyclerView;
+    private RouteAdapter routeAdapter;
+    private boolean IS_SPRAYING = false;
+    private NavigationView mNavigationView;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +113,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        btnBatDauTuoi = findViewById(R.id.bat_dau_tuoi);
+        // TODO: 07/04/2018
+        txtRouteInfo = findViewById(R.id.text_view_route_info);
+        btnCancel = findViewById(R.id.button_cancel);
+        btnCalculate = findViewById(R.id.button_calculate);
+        createBottomSheet();
+        createNavigationView();
+        setUpRecyclerView();
     }
 
     private boolean CheckGooglePlayServices() {
@@ -131,6 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnPolylineClickListener(this);
 
         // TODO: 06/04/2018
         fakePosition();
@@ -157,15 +190,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addTrees() {
         // TODO: 06/04/2018
         List<Tree> tempTree = new ArrayList<>();
-        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_tree));
-        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_tree));
+        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_tree, "Rau muong"));
+        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_tree, "Hoa hong"));
+        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_tree, "Cai cuc"));
+        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_tree, "Cay bang"));
+        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_tree, "Hoa dam but"));
+        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_tree, "Cay phuong"));
+        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_tree, "Cay da"));
+        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_tree, "Cay buoi"));
+        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_tree, "Hoa loa ken"));
+        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_tree, "Cay chanh"));
+        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_tree, "Cay gao"));
         for (Tree tree : tempTree) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(tree.getLatlon().latitude, tree.getLatlon().longitude))
@@ -173,11 +208,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(BitmapDescriptorFactory.fromResource(tree.getIcon()))
                     .title(String.valueOf(tree.getId())));
             tree.setId(marker.getId());
-            trees.put(marker.getId(), tree);
+            stopovers.put(marker.getId(), tree);
+            markers.put(marker.getId(), marker);
+        }
+        // nguon nuoc
+        List<Water> tempWater = new ArrayList<>();
+        tempWater.add(new Water(new LatLng(21.006394, 105.843622), R.mipmap.ic_water, "Nguồn nước"));
+        tempWater.add(new Water(new LatLng(21.006597, 105.845587), R.mipmap.ic_water, "Nguồn nước"));
+        tempWater.add(new Water(new LatLng(21.003798, 105.844516), R.mipmap.ic_water, "Nguồn nước"));
+        for (Water water : tempWater) {
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(water.getLatlon().latitude, water.getLatlon().longitude))
+                    .snippet(MARKER_TREE)
+                    .icon(BitmapDescriptorFactory.fromResource(water.getIcon()))
+                    .title(String.valueOf(water.getId())));
+            water.setId(marker.getId());
+            stopovers.put(marker.getId(), water);
             markers.put(marker.getId(), marker);
         }
     }
 
+    private void setUpRecyclerView() {
+        recyclerView = findViewById(R.id.recycler_view_stopovers);
+        routeAdapter = new RouteAdapter(tour);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(routeAdapter);
+    }
+
+
+    private void createNavigationView() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.left_drawer);
+        mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void createBottomSheet() {
+        bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        if (IS_SPRAYING) {
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+    }
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -189,50 +282,127 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onClick(View v) {
-        Object dataTransfer[] = new Object[2];
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        Object dataTransfer[];
         switch (v.getId()) {
             // TODO: 06/04/2018
-
-            case R.id.bat_dau_tuoi:
+            case R.id.button_calculate:
                 // xoa duong di truoc day
-                if (polylines != null && !polylines.isEmpty()) {
-                    for (Polyline polyline : polylines) {
+                for (List<Polyline> route : listRoutesPolylines) {
+                    for (Polyline polyline : route) {
                         polyline.remove();
                     }
-                    polylines.clear();
                 }
+                listRoutesPolylines.clear();
                 dataTransfer = new Object[3];
-                List<Tree> stopover = new ArrayList(tour.values());
-                String url = getDirectionsUrl(stopover);
+                String url = getDirectionsUrl(tour);
                 GetDirectionsData getDirectionsData = new GetDirectionsData();
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
+                dataTransfer[2] = new GetDirectionCallBack();
                 getDirectionsData.execute(dataTransfer);
+                IS_SPRAYING = true;
                 break;
-//        }
+            case R.id.button_cancel:
+                IS_SPRAYING = false;
+                isNotSpaying();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+            case R.id.image_view_open_menu:
+                hideKeyboard();
+                mDrawerLayout.openDrawer(Gravity.LEFT);
+                break;
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+//            case R.id.create_new_group:
+//                onClickCreateNewGroup();
+//                break;
+            default:
+                break;
+        }
+        mDrawerLayout.closeDrawer(Gravity.START);
+        return false;
+    }
+
+    public class GetDirectionCallBack {
+        public boolean success() {
+            spraying();
+            updateRouteInfo();
+            return true;
+        }
+
+        public void updateRouteInfo() {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            String info = "Khoảng cách ~ " + routesInfo.get(0).get("distance") +
+                    "\nThời gian ~ " + routesInfo.get(0).get("duration");
+            txtRouteInfo.setText(info);
         }
     }
 
     // TODO: 06/04/2018
-    private String getDirectionsUrl(List<Tree> stopover) {
+    private String getDirectionsUrl(List<StopOver> route) {
+        getWater(route);
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
-        googleDirectionsUrl.append("&destination=" + stopover.get(stopover.size() - 1).getLatlon().latitude + "," + stopover.get(stopover.size() - 1).getLatlon().longitude);
+        googleDirectionsUrl.append("&destination=" + route.get(route.size() - 1).getLatlon().latitude + "," + route.get(route.size() - 1).getLatlon().longitude);
+        googleDirectionsUrl.append("&alternatives=true");
         googleDirectionsUrl.append("&mode=walking");
-        googleDirectionsUrl.append("&waypoints=optimize:true");
-        for (Tree tree : stopover) {
-            googleDirectionsUrl.append("|via:" + tree.getLatlon().latitude + "," + tree.getLatlon().longitude);
+        if (route.size() > 1) {
+            googleDirectionsUrl.append("&waypoints=optimize:false");
+            for (StopOver stopOver : route) {
+                googleDirectionsUrl.append("|via:" + stopOver.getLatlon().latitude + "," + stopOver.getLatlon().longitude);
+            }
         }
-        googleDirectionsUrl.append("&key=" + "AIzaSyCAcfy-02UHSu2F6WeQ1rhQhkCr51eBL9g");
+        googleDirectionsUrl.append("&key=" + getResources().getString(R.string.google_maps_key));
+        Log.e("MY_TAG", "getDirectionsUrl: " + googleDirectionsUrl.toString());
         return googleDirectionsUrl.toString();
+    }
+
+    private void getWater(List<StopOver> route) {
+        // stopover dau tien phai la nguon nuoc
+        if (!(route.get(0) instanceof Water)) {
+            for (int i = 1; i < route.size(); i++) {
+                if (route.get(i) instanceof Water) {
+                    route.add(0, route.get(i));
+                    route.get(i).setChoose(!route.get(i).isChoose());
+                    markers.get(route.get(i).getId()).setIcon(
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
+                    routeAdapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+            // neu trong list khong co water
+            for (StopOver stopOver : stopovers.values()) {
+                if (stopOver instanceof Water) {
+                    route.add(0, stopOver);
+                    stopOver.setChoose(!stopOver.isChoose());
+                    markers.get(stopOver.getId()).setIcon(
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
+                    routeAdapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+        }
     }
 
     private String getDirectionsUrl() {
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
         googleDirectionsUrl.append("&destination=" + end_latitude + "," + end_longitude);
-        googleDirectionsUrl.append("&key=" + "AIzaSyCAcfy-02UHSu2F6WeQ1rhQhkCr51eBL9g");
+        googleDirectionsUrl.append("&key=" + getResources().getString(R.string.google_maps_key));
 
         return googleDirectionsUrl.toString();
     }
@@ -243,7 +413,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
         googlePlacesUrl.append("&type=" + nearbyPlace);
         googlePlacesUrl.append("&sensor=true");
-        googlePlacesUrl.append("&key=" + "AIzaSyBj-cnmMUY21M0vnIKz0k3tD3bRdyZea-Y");
+        googlePlacesUrl.append("&key=" + getResources().getString(R.string.google_maps_key));
         Log.d("getUrl", googlePlacesUrl.toString());
         return (googlePlacesUrl.toString());
     }
@@ -271,8 +441,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         // TODO: 06/04/2018
-//        Log.d("onLocationChanged", "entered");
-//
 //        mLastLocation = location;
 //        if (mCurrLocationMarker != null) {
 //            mCurrLocationMarker.remove();
@@ -287,15 +455,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        markerOptions.position(latLng);
 //        markerOptions.draggable(true);
 //        markerOptions.title("Current Position");
-//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//        if (location.hasBearing()) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow));
+//            markerOptions.anchor(0.5f, 0.5f);
+//            markerOptions.rotation(location.getBearing());
+//        } else {
+//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker());
+//        }
 //        mCurrLocationMarker = mMap.addMarker(markerOptions);
 //
 //        //move map camera
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 //
-//
-//        Toast.makeText(MapsActivity.this, "Your Current Location", Toast.LENGTH_LONG).show();
+//        Toast.makeText(MapsActivity.this, "HasBearing: " + location.hasBearing() +
+//                "; bearing: " + location.getBearing(), Toast.LENGTH_LONG).show();
 //
 //
 //        //stop location updates
@@ -303,7 +477,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 //            Log.d("onLocationChanged", "Removing Location Updates");
 //        }
-
     }
 
     @Override
@@ -381,15 +554,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (marker.getSnippet().equals(MARKER_TREE)) {
+        if (marker != null && marker.getSnippet() != null && marker.getSnippet().equals(MARKER_TREE) || marker.getSnippet().equals(MARKER_WATER)) {
             Intent intent = new Intent(this, TreeDetail.class);
-            Tree tree = trees.get(marker.getId());
-            if (tree != null) {
-                intent.putExtra(TREE, tree);
-                startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
-            }
+            StopOver stopOver = stopovers.get(marker.getId());
+            handleStopoverClicked(stopOver);
         }
-        return false;
+        return true;
+    }
+
+    private void handleStopoverClicked(StopOver stopOver) {
+        if (stopOver != null) {
+            stopOver.setChoose(!stopOver.isChoose());
+            updateTour(stopOver);
+//                intent.putExtra(TREE, tree);
+//                startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
+        }
     }
 
     // TODO: 06/04/2018
@@ -398,18 +577,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_TREE_DETAIL_ACT) {
             if (resultCode == Activity.RESULT_OK) {
                 Tree tree = data.getParcelableExtra("result");
-                trees.put(tree.getId(), tree);
+                updateTour(tree);
+            }
+        }
+    }
+
+    public void updateTour(StopOver stopOver) {
+//        stopovers.put(tree.getId(), tree);
 //                Toast.makeText(this, "" + tree.isChoose(), Toast.LENGTH_SHORT).show();
-                Marker marker = markers.get(tree.getId());
-                if (marker != null) {
-                    if (tree.isChoose()) {
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
-                        tour.put(tree.getId(), tree);
-                    } else {
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tree));
-                        tour.remove(tree.getId());
-                    }
-                }
+        Marker marker = markers.get(stopOver.getId());
+        if (marker != null) {
+            if (stopOver.isChoose()) {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
+                tour.add(stopOver);
+            } else {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(stopOver.getIcon()));
+                tour.remove(stopOver);
             }
         }
         checkTour();
@@ -418,13 +601,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void checkTour() {
         // neu Tour != null thi hien nut de bat dau tuoi
         if (tour.isEmpty()) {
-            btnBatDauTuoi.setVisibility(View.GONE);
+            IS_SPRAYING = false;
+            isNotSpaying();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         } else {
-            btnBatDauTuoi.setVisibility(View.VISIBLE);
+            if (IS_SPRAYING) {
+                btnCalculate.performClick();
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
         }
-        Toast.makeText(this, "" + tour.size(), Toast.LENGTH_SHORT).show();
+        routeAdapter.notifyDataSetChanged();
     }
 
+    private void spraying() {
+        btnCalculate.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.VISIBLE);
+        txtRouteInfo.setVisibility(View.VISIBLE);
+    }
+
+    private void isNotSpaying() {
+        btnCalculate.setVisibility(View.VISIBLE);
+        btnCancel.setVisibility(View.GONE);
+        txtRouteInfo.setVisibility(View.GONE);
+        for (List<Polyline> route : listRoutesPolylines) {
+            for (Polyline polyline1 : route) {
+                polyline1.remove();
+            }
+        }
+    }
+
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+        // chuyen het ve ...
+        for (List<Polyline> route : listRoutesPolylines) {
+            for (Polyline polyline1 : route) {
+                polyline1.setPattern(alternativePattern);
+            }
+        }
+        // boi dam shortest route
+        for (int i = 0; i < listRoutesPolylines.size(); i++) {
+            for (Polyline polyline1 : listRoutesPolylines.get(i)) {
+                if (polyline1.getId().equals(polyline.getId())) {
+                    for (Polyline polyline2 : listRoutesPolylines.get(i)) {
+                        polyline2.setPattern(null);
+                    }
+                    // update tour info
+                    String info = "Khoảng cách ~ " + routesInfo.get(i).get("distance") +
+                            "\nThời gian ~ " + routesInfo.get(i).get("duration");
+                    txtRouteInfo.setText(info);
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
 
 

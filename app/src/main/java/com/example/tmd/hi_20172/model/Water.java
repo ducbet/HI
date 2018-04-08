@@ -9,11 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by tmd on 06/04/2018.
  */
 
-public class Tree extends StopOver implements Parcelable {
+public class Water extends StopOver implements Parcelable {
 
-
-
-    protected Tree(Parcel in) {
+    protected Water(Parcel in) {
         id = in.readString();
         latlon = in.readParcelable(LatLng.class.getClassLoader());
         icon = in.readInt();
@@ -21,15 +19,15 @@ public class Tree extends StopOver implements Parcelable {
         choose = in.readByte() != 0;
     }
 
-    public static final Creator<Tree> CREATOR = new Creator<Tree>() {
+    public static final Creator<Water> CREATOR = new Creator<Water>() {
         @Override
-        public Tree createFromParcel(Parcel in) {
-            return new Tree(in);
+        public Water createFromParcel(Parcel in) {
+            return new Water(in);
         }
 
         @Override
-        public Tree[] newArray(int size) {
-            return new Tree[size];
+        public Water[] newArray(int size) {
+            return new Water[size];
         }
     };
 
@@ -41,7 +39,7 @@ public class Tree extends StopOver implements Parcelable {
         this.choose = choose;
     }
 
-    public static Creator<Tree> getCREATOR() {
+    public static Creator<Water> getCREATOR() {
         return CREATOR;
     }
 
@@ -77,18 +75,18 @@ public class Tree extends StopOver implements Parcelable {
         this.name = name;
     }
 
-    public Tree(LatLng latlon, int icon) {
+    public Water(LatLng latlon, int icon) {
         this.latlon = latlon;
         this.icon = icon;
     }
 
-    public Tree(LatLng latlon, int icon, String name) {
+    public Water(LatLng latlon, int icon, String name) {
         this.latlon = latlon;
         this.icon = icon;
         this.name = name;
     }
 
-    public Tree(String id, LatLng latlon, int icon, String name, boolean choose) {
+    public Water(String id, LatLng latlon, int icon, String name, boolean choose) {
         this.id = id;
         this.latlon = latlon;
         this.icon = icon;

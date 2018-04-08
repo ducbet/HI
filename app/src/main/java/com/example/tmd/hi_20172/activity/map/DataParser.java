@@ -2,6 +2,8 @@ package com.example.tmd.hi_20172.activity.map;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.Polyline;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,40 +11,34 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Priyanka
  */
 
 class DataParser {
+    // TODO: 07/04/2018
+    public static List<Map<String, String>> routesInfo = new ArrayList<>();
 
-
-    private HashMap<String,String> getDuration(JSONArray googleDirectionsJson)
-    {
-        HashMap<String,String> googleDirectionsMap = new HashMap<>();
-        String duration = "";
-        String distance ="";
-
-
+    private Map<String, String> getDuration(JSONArray googleDirectionsJson) {
+        // TODO: 07/04/2018
+        Map<String, String> routeInfo = new HashMap<String, String>();
+        String duration;
+        String distance;
         try {
-
             duration = googleDirectionsJson.getJSONObject(0).getJSONObject("duration").getString("text");
             distance = googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
-
-            googleDirectionsMap.put("duration" , duration);
-            googleDirectionsMap.put("distance", distance);
-
+            routeInfo.put("duration", duration);
+            routeInfo.put("distance", distance);
+            routesInfo.add(routeInfo);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-        return googleDirectionsMap;
+        return routeInfo;
     }
 
-
-    private HashMap<String, String> getPlace(JSONObject googlePlaceJson)
-    {
+    private HashMap<String, String> getPlace(JSONObject googlePlaceJson) {
         HashMap<String, String> googlePlacesMap = new HashMap<>();
         String placeName = "-NA-";
         String vicinity = "-NA-";
@@ -53,14 +49,12 @@ class DataParser {
 
 
         try {
-            if(!googlePlaceJson.isNull("name"))
-            {
+            if (!googlePlaceJson.isNull("name")) {
 
-                    placeName = googlePlaceJson.getString("name");
+                placeName = googlePlaceJson.getString("name");
 
             }
-            if( !googlePlaceJson.isNull("vicinity"))
-            {
+            if (!googlePlaceJson.isNull("vicinity")) {
                 vicinity = googlePlaceJson.getString("vicinity");
 
             }
@@ -69,11 +63,11 @@ class DataParser {
 
             reference = googlePlaceJson.getString("reference");
 
-            googlePlacesMap.put("place_name" , placeName);
-            googlePlacesMap.put("vicinity" , vicinity);
-            googlePlacesMap.put("lat" , latitude);
-            googlePlacesMap.put("lng" , longitude);
-            googlePlacesMap.put("reference" , reference);
+            googlePlacesMap.put("place_name", placeName);
+            googlePlacesMap.put("vicinity", vicinity);
+            googlePlacesMap.put("lat", latitude);
+            googlePlacesMap.put("lng", longitude);
+            googlePlacesMap.put("reference", reference);
 
 
             Log.d("getPlace", "Putting Places");
@@ -85,17 +79,13 @@ class DataParser {
         return googlePlacesMap;
     }
 
-
-
-    private List<HashMap<String,String>> getPlaces(JSONArray jsonArray)
-    {
+    private List<HashMap<String, String>> getPlaces(JSONArray jsonArray) {
         int count = jsonArray.length();
-        List<HashMap<String,String>> placesList = new ArrayList<>();
-        HashMap<String,String> placeMap = null;
+        List<HashMap<String, String>> placesList = new ArrayList<>();
+        HashMap<String, String> placeMap = null;
         Log.d("Places", "getPlaces");
 
-        for(int i = 0;i<count;i++)
-        {
+        for (int i = 0; i < count; i++) {
             try {
                 placeMap = getPlace((JSONObject) jsonArray.get(i));
                 placesList.add(placeMap);
@@ -108,11 +98,9 @@ class DataParser {
 
     }
 
-    public List<HashMap<String,String>> parse(String jsonData)
-    {
+    public List<HashMap<String, String>> parse(String jsonData) {
         JSONArray jsonArray = null;
         JSONObject jsonObject;
-
         try {
             Log.d("Places", "parse");
 
@@ -126,27 +114,33 @@ class DataParser {
         return getPlaces(jsonArray);
     }
 
-    public String[] parseDirections(String jsonData)
-    {
-        JSONArray jsonArray = null;
+    public List<String[]> parseDirections(String jsonData) {
+        List<String[]> directionsList = new ArrayList<>();
+        routesInfo.clear();
+        JSONArray route;
         JSONObject jsonObject;
-
+        JSONArray googleDirectionsJson;
         try {
             jsonObject = new JSONObject(jsonData);
-            jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+            // TODO: 06/04/2018
+            JSONArray routes = jsonObject.getJSONArray("routes");
+            for (int i = 0; i < routes.length(); i++) {
+                googleDirectionsJson = routes.getJSONObject(i).getJSONArray("legs");
+                route = googleDirectionsJson.getJSONObject(0).getJSONArray("steps");
+                getDuration(googleDirectionsJson);
+                directionsList.add(getPaths(route));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return getPaths(jsonArray);
+        return directionsList;
     }
 
-    public String[] getPaths(JSONArray googleStepsJson )
-    {
+    public String[] getPaths(JSONArray googleStepsJson) {
         int count = googleStepsJson.length();
         String[] polylines = new String[count];
 
-        for(int i = 0;i<count;i++)
-        {
+        for (int i = 0; i < count; i++) {
             try {
                 polylines[i] = getPath(googleStepsJson.getJSONObject(i));
             } catch (JSONException e) {
@@ -157,8 +151,7 @@ class DataParser {
         return polylines;
     }
 
-    public String getPath(JSONObject googlePathJson)
-    {
+    public String getPath(JSONObject googlePathJson) {
         String polyline = "";
         try {
             polyline = googlePathJson.getJSONObject("polyline").getString("points");
@@ -167,7 +160,4 @@ class DataParser {
         }
         return polyline;
     }
-
-
-
 }
