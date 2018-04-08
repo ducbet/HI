@@ -2,21 +2,29 @@ package com.example.tmd.hi_20172.activity.map;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.location.Location;
+import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnPolylineClickListener {
+        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
     public static final String TREE = "TREE";
@@ -81,6 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RecyclerView recyclerView;
     private RouteAdapter routeAdapter;
     private boolean IS_SPRAYING = false;
+    private NavigationView mNavigationView;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setHeightBtnBatDauTuoi();
         setHeightBtnCancel();
         createBottomSheet();
+        createNavigationView();
         setUpRecyclerView();
     }
 
@@ -225,6 +236,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         styledAttributes.recycle();
     }
 
+    private void createNavigationView() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.left_drawer);
+        mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+
     private void createBottomSheet() {
         bottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -255,6 +273,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
     }
@@ -295,7 +314,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 isNotSpaying();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
+            case R.id.image_view_open_menu:
+                hideKeyboard();
+                mDrawerLayout.openDrawer(Gravity.LEFT);
+                break;
         }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+//            case R.id.create_new_group:
+//                onClickCreateNewGroup();
+//                break;
+            default:
+                break;
+        }
+        mDrawerLayout.closeDrawer(Gravity.START);
+        return false;
     }
 
     public class GetDirectionCallBack {
@@ -374,8 +418,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         // TODO: 06/04/2018
-//        Log.d("onLocationChanged", "entered");
-//
 //        mLastLocation = location;
 //        if (mCurrLocationMarker != null) {
 //            mCurrLocationMarker.remove();
@@ -390,15 +432,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        markerOptions.position(latLng);
 //        markerOptions.draggable(true);
 //        markerOptions.title("Current Position");
-//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//        if (location.hasBearing()) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow));
+//            markerOptions.anchor(0.5f, 0.5f);
+//            markerOptions.rotation(location.getBearing());
+//        } else {
+//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker());
+//        }
 //        mCurrLocationMarker = mMap.addMarker(markerOptions);
 //
 //        //move map camera
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 //
-//
-//        Toast.makeText(MapsActivity.this, "Your Current Location", Toast.LENGTH_LONG).show();
+//        Toast.makeText(MapsActivity.this, "HasBearing: " + location.hasBearing() +
+//                "; bearing: " + location.getBearing(), Toast.LENGTH_LONG).show();
 //
 //
 //        //stop location updates
@@ -406,7 +454,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 //            Log.d("onLocationChanged", "Removing Location Updates");
 //        }
-
     }
 
     @Override
@@ -580,6 +627,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     return;
                 }
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }
