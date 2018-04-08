@@ -23,14 +23,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     private List<StopOver> mList;
     private Context context;
 
-    public RouteAdapter(Map<String, StopOver> list) {
-        mList = new ArrayList<>(list.values());
-    }
-
-    public void updateTour(Map<String, StopOver> newList) {
-        this.mList.clear();
-        mList.addAll(newList.values());
-        notifyDataSetChanged();
+    public RouteAdapter(List<StopOver> list) {
+        mList = list;
     }
 
     @Override

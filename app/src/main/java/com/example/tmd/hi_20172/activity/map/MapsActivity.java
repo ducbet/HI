@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.TypedArray;
 import android.location.Location;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +31,7 @@ import com.example.tmd.hi_20172.R;
 import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
+import com.example.tmd.hi_20172.model.Water;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -67,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
+    private static final String MARKER_WATER = "MARKER_WATER";
     public static final String TREE = "TREE";
     private static final int REQUEST_TREE_DETAIL_ACT = 15;
     private GoogleMap mMap;
@@ -79,9 +79,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double end_latitude, end_longitude;
 
     // TODO: 06/04/2018
-    Map<String, Tree> trees = new HashMap();
+    Map<String, StopOver> stopovers = new HashMap();
     Map<String, Marker> markers = new HashMap<>();
-    Map<String, StopOver> tour = new HashMap<>();
+    List<StopOver> tour = new ArrayList<>();
     private Button btnCalculate, btnCancel;
     private TextView txtRouteInfo;
     private BottomSheetBehavior<View> bottomSheetBehavior;
@@ -208,7 +208,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(BitmapDescriptorFactory.fromResource(tree.getIcon()))
                     .title(String.valueOf(tree.getId())));
             tree.setId(marker.getId());
-            trees.put(marker.getId(), tree);
+            stopovers.put(marker.getId(), tree);
+            markers.put(marker.getId(), marker);
+        }
+        // nguon nuoc
+        List<Water> tempWater = new ArrayList<>();
+        tempWater.add(new Water(new LatLng(21.006394, 105.843622), R.mipmap.ic_water, "Nguồn nước"));
+        tempWater.add(new Water(new LatLng(21.006597, 105.845587), R.mipmap.ic_water, "Nguồn nước"));
+        tempWater.add(new Water(new LatLng(21.003798, 105.844516), R.mipmap.ic_water, "Nguồn nước"));
+        for (Water water : tempWater) {
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(water.getLatlon().latitude, water.getLatlon().longitude))
+                    .snippet(MARKER_TREE)
+                    .icon(BitmapDescriptorFactory.fromResource(water.getIcon()))
+                    .title(String.valueOf(water.getId())));
+            water.setId(marker.getId());
+            stopovers.put(marker.getId(), water);
             markers.put(marker.getId(), marker);
         }
     }
@@ -267,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onClick(View v) {
-        Object dataTransfer[] = new Object[2];
+        Object dataTransfer[];
         switch (v.getId()) {
             // TODO: 06/04/2018
             case R.id.button_calculate:
@@ -279,8 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 listRoutesPolylines.clear();
                 dataTransfer = new Object[3];
-                List<Tree> stopover = new ArrayList(tour.values());
-                String url = getDirectionsUrl(stopover);
+                String url = getDirectionsUrl(tour);
                 GetDirectionsData getDirectionsData = new GetDirectionsData();
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
@@ -304,7 +318,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
     }
 
@@ -337,21 +353,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     // TODO: 06/04/2018
-    private String getDirectionsUrl(List<Tree> stopover) {
+    private String getDirectionsUrl(List<StopOver> route) {
+        getWater(route);
         StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
         googleDirectionsUrl.append("origin=" + latitude + "," + longitude);
-        googleDirectionsUrl.append("&destination=" + stopover.get(stopover.size() - 1).getLatlon().latitude + "," + stopover.get(stopover.size() - 1).getLatlon().longitude);
+        googleDirectionsUrl.append("&destination=" + route.get(route.size() - 1).getLatlon().latitude + "," + route.get(route.size() - 1).getLatlon().longitude);
         googleDirectionsUrl.append("&alternatives=true");
         googleDirectionsUrl.append("&mode=walking");
-        if (stopover.size() > 1) {
-            googleDirectionsUrl.append("&waypoints=optimize:true");
-            for (Tree tree : stopover) {
-                googleDirectionsUrl.append("|via:" + tree.getLatlon().latitude + "," + tree.getLatlon().longitude);
+        if (route.size() > 1) {
+            googleDirectionsUrl.append("&waypoints=optimize:false");
+            for (StopOver stopOver : route) {
+                googleDirectionsUrl.append("|via:" + stopOver.getLatlon().latitude + "," + stopOver.getLatlon().longitude);
             }
         }
         googleDirectionsUrl.append("&key=" + getResources().getString(R.string.google_maps_key));
         Log.e("MY_TAG", "getDirectionsUrl: " + googleDirectionsUrl.toString());
         return googleDirectionsUrl.toString();
+    }
+
+    private void getWater(List<StopOver> route) {
+        // stopover dau tien phai la nguon nuoc
+        if (!(route.get(0) instanceof Water)) {
+            for (int i = 1; i < route.size(); i++) {
+                if (route.get(i) instanceof Water) {
+                    route.add(0, route.get(i));
+                    route.get(i).setChoose(!route.get(i).isChoose());
+                    markers.get(route.get(i).getId()).setIcon(
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
+                    routeAdapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+            // neu trong list khong co water
+            for (StopOver stopOver : stopovers.values()) {
+                if (stopOver instanceof Water) {
+                    route.add(0, stopOver);
+                    stopOver.setChoose(!stopOver.isChoose());
+                    markers.get(stopOver.getId()).setIcon(
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
+                    routeAdapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+        }
     }
 
     private String getDirectionsUrl() {
@@ -510,19 +554,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (marker.getSnippet() != null && marker.getSnippet().equals(MARKER_TREE)) {
+        if (marker != null && marker.getSnippet() != null && marker.getSnippet().equals(MARKER_TREE) || marker.getSnippet().equals(MARKER_WATER)) {
             Intent intent = new Intent(this, TreeDetail.class);
-            Tree tree = trees.get(marker.getId());
-            if (tree != null) {
-                tree.setChoose(!tree.isChoose());
-                updateTour(tree);
-//                intent.putExtra(TREE, tree);
-//                startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
-            }
+            StopOver stopOver = stopovers.get(marker.getId());
+            handleStopoverClicked(stopOver);
         }
         return true;
     }
 
+    private void handleStopoverClicked(StopOver stopOver) {
+        if (stopOver != null) {
+            stopOver.setChoose(!stopOver.isChoose());
+            updateTour(stopOver);
+//                intent.putExtra(TREE, tree);
+//                startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
+        }
+    }
 
     // TODO: 06/04/2018
     @Override
@@ -536,16 +583,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void updateTour(StopOver stopOver) {
-//        trees.put(tree.getId(), tree);
+//        stopovers.put(tree.getId(), tree);
 //                Toast.makeText(this, "" + tree.isChoose(), Toast.LENGTH_SHORT).show();
         Marker marker = markers.get(stopOver.getId());
         if (marker != null) {
             if (stopOver.isChoose()) {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
-                tour.put(stopOver.getId(), stopOver);
+                tour.add(stopOver);
             } else {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tree));
-                tour.remove(stopOver.getId());
+                marker.setIcon(BitmapDescriptorFactory.fromResource(stopOver.getIcon()));
+                tour.remove(stopOver);
             }
         }
         checkTour();
@@ -564,7 +611,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         }
-        routeAdapter.updateTour(tour);
+        routeAdapter.notifyDataSetChanged();
     }
 
     private void spraying() {
