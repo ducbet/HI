@@ -7,7 +7,7 @@
             android:icon="@drawable/ic_user2"
             />
         <item
-            android:title="@string/title_user_info"
+            android:title="@string/title_language"
             android:id="@+id/nav_language"
             android:icon="@drawable/ic_language"
             />

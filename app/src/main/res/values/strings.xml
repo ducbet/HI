@@ -13,5 +13,9 @@
     <string name="user_name">Họ tên: Giáp Minh Cương</string>
     <string name="user_email">Email: cuonggm48@gmail.com</string>
     <string name="user_type">Loại tài khoản: Tình nguyện viên</string>
+    <string name="title_language">Ngôn ngữ</string>
+    <string name="language_vi">Tiếng Việt</string>
+    <string name="title_choose_language">Chọn ngôn ngữ</string>
+    <string name="language_en">English</string>
 
 </resources>
