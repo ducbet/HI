@@ -9,14 +9,14 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by tmd on 07/04/2018.
  */
 
-public class StopOver implements Parcelable {
+public abstract class StopOver implements Parcelable {
     protected String id = "";
     protected LatLng latlon;
     protected int icon;
     protected boolean choose;
     protected String name;
 
-    public StopOver(LatLng latlon, int icon, String name) {
+    protected StopOver(LatLng latlon, int icon, String name) {
         this.latlon = latlon;
         this.icon = icon;
         this.name = name;
@@ -30,17 +30,14 @@ public class StopOver implements Parcelable {
         name = in.readString();
     }
 
-    public static final Creator<StopOver> CREATOR = new Creator<StopOver>() {
-        @Override
-        public StopOver createFromParcel(Parcel in) {
-            return new StopOver(in);
-        }
-
-        @Override
-        public StopOver[] newArray(int size) {
-            return new StopOver[size];
-        }
-    };
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeParcelable(latlon, flags);
+        dest.writeInt(icon);
+        dest.writeByte((byte) (choose ? 1 : 0));
+        dest.writeString(name);
+    }
 
     public String getId() {
         return id;
@@ -48,14 +45,6 @@ public class StopOver implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LatLng getLatlon() {
@@ -82,17 +71,11 @@ public class StopOver implements Parcelable {
         this.choose = choose;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeParcelable(latlon, i);
-        parcel.writeInt(icon);
-        parcel.writeByte((byte) (choose ? 1 : 0));
-        parcel.writeString(name);
+    public void setName(String name) {
+        this.name = name;
     }
 }

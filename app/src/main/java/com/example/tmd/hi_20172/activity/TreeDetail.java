@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tmd.hi_20172.R;
+import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
 
 import static com.example.tmd.hi_20172.activity.map.MapsActivity.TREE;
