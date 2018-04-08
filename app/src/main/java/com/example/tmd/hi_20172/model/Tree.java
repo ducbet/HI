@@ -21,6 +21,34 @@ public class Tree extends StopOver implements Parcelable {
         this.status = status;
     }
 
+    protected Tree(Parcel in) {
+        super(in);
+        status = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeInt(status);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Tree> CREATOR = new Creator<Tree>() {
+        @Override
+        public Tree createFromParcel(Parcel in) {
+            return new Tree(in);
+        }
+
+        @Override
+        public Tree[] newArray(int size) {
+            return new Tree[size];
+        }
+    };
+
     public int getStatus() {
         return status;
     }
