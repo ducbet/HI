@@ -115,8 +115,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         // TODO: 07/04/2018
         txtRouteInfo = findViewById(R.id.text_view_route_info);
-        setHeightBtnBatDauTuoi();
-        setHeightBtnCancel();
+        btnCancel = findViewById(R.id.button_cancel);
+        btnCalculate = findViewById(R.id.button_calculate);
         createBottomSheet();
         createNavigationView();
         setUpRecyclerView();
@@ -220,21 +220,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         recyclerView.setAdapter(routeAdapter);
     }
 
-    private void setHeightBtnCancel() {
-        btnCancel = findViewById(R.id.button_cancel);
-        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                new int[]{android.R.attr.actionBarSize});
-        btnCalculate.setHeight((int) styledAttributes.getDimension(0, 0));
-        styledAttributes.recycle();
-    }
-
-    private void setHeightBtnBatDauTuoi() {
-        btnCalculate = findViewById(R.id.button_calculate);
-        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                new int[]{android.R.attr.actionBarSize});
-        btnCalculate.setHeight((int) styledAttributes.getDimension(0, 0));
-        styledAttributes.recycle();
-    }
 
     private void createNavigationView() {
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -242,15 +227,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-
     private void createBottomSheet() {
         bottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setHideable(true);
-        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                new int[]{android.R.attr.actionBarSize});
-        bottomSheetBehavior.setPeekHeight((int) styledAttributes.getDimension(0, 0));
-        styledAttributes.recycle();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -556,17 +535,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void updateTour(Tree tree) {
+    public void updateTour(StopOver stopOver) {
 //        trees.put(tree.getId(), tree);
 //                Toast.makeText(this, "" + tree.isChoose(), Toast.LENGTH_SHORT).show();
-        Marker marker = markers.get(tree.getId());
+        Marker marker = markers.get(stopOver.getId());
         if (marker != null) {
-            if (tree.isChoose()) {
+            if (stopOver.isChoose()) {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_checked));
-                tour.put(tree.getId(), tree);
+                tour.put(stopOver.getId(), stopOver);
             } else {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tree));
-                tour.remove(tree.getId());
+                tour.remove(stopOver.getId());
             }
         }
         checkTour();

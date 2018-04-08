@@ -7,10 +7,19 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public abstract class StopOver {
+    protected String id = "";
     protected LatLng latlon;
     protected int icon;
     protected boolean choose;
     protected String name;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
