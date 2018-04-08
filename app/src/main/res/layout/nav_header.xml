@@ -12,8 +12,10 @@
         android:layout_marginBottom="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginStart="@dimen/dp_15"
+        android:text="App tưới cây"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/sp_20" />
+        android:textSize="@dimen/sp_30"
+        android:textStyle="bold"/>
 </RelativeLayout>
 
 

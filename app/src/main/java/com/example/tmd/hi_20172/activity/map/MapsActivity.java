@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
 import com.example.tmd.hi_20172.activity.TreeDetail;
+import com.example.tmd.hi_20172.activity.UserInfoActivity;
 import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
 import com.example.tmd.hi_20172.model.Water;
@@ -240,6 +241,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.left_drawer);
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch(item.getItemId()) {
+                            case R.id.nav_user_info:
+                                Intent i = new Intent(MapsActivity.this, UserInfoActivity.class);
+                                startActivity(i);
+                                break;
+                        }
+                        return true;
+                    }
+                }
+        );
     }
 
     private void createBottomSheet() {

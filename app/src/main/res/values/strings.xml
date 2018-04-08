@@ -9,5 +9,9 @@
     <string name="title_confirm_pass_word">Xác nhận mật khẩu</string>
     <string name="title_phone_or_email">Email hoặc số điện thoại</string>
     <string name="search_here">Tìm kiếm ở đây</string>
+    <string name="title_user_info">Thông tin người dùng</string>
+    <string name="user_name">Họ tên: Giáp Minh Cương</string>
+    <string name="user_email">Email: cuonggm48@gmail.com</string>
+    <string name="user_type">Loại tài khoản: Tình nguyện viên</string>
 
 </resources>
