@@ -567,7 +567,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
         if (marker != null && marker.getSnippet() != null && marker.getSnippet().equals(MARKER_TREE) || marker.getSnippet().equals(MARKER_WATER)) {
-            Intent intent = new Intent(this, TreeDetail.class);
             StopOver stopOver = stopovers.get(marker.getId());
             handleStopoverClicked(stopOver);
         }
@@ -578,8 +577,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (stopOver != null) {
             stopOver.setChoose(!stopOver.isChoose());
             updateTour(stopOver);
-//                intent.putExtra(TREE, tree);
-//                startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
+//            Intent intent = new Intent(this, TreeDetail.class);
+//            intent.putExtra(TREE, stopOver);
+//            startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
         }
     }
 
