@@ -180,10 +180,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latitude = 21.005019;
         longitude = 105.843644;
         LatLng latLng = new LatLng(latitude, longitude);// Bach Khoa
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title("Current Position")
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow))
+                .rotation(45)
+                .anchor(0.5f, 0.5f);
         mCurrLocationMarker = mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
@@ -193,17 +195,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addTrees() {
         // TODO: 06/04/2018
         List<Tree> tempTree = new ArrayList<>();
-        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_tree, "Rau muong", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_tree, "Hoa hong", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_tree, "Cai cuc", Tree.GREEN));
-        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_tree, "Cay bang", Tree.YELLOW));
-        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_tree, "Hoa dam but", Tree.GREEN));
-        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_tree, "Cay phuong", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_tree, "Cay da", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_tree, "Cay buoi", Tree.GREEN));
-        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_tree, "Hoa loa ken", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_tree, "Cay chanh", Tree.YELLOW));
-        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_tree, "Cay gao", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_01_do, "Rau muong", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_02_do, "Hoa hong", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_03_xa, "Cai cuc", Tree.GREEN));
+        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_04_va, "Cay bang", Tree.YELLOW));
+        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_05_xa, "Hoa dam but", Tree.GREEN));
+        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_06_do, "Cay phuong", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_07_do, "Cay da", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_08_xa, "Cay buoi", Tree.GREEN));
+        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_09_do, "Hoa loa ken", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_10_va, "Cay chanh", Tree.YELLOW));
+        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_11_do, "Cay gao", Tree.RED));
         for (Tree tree : tempTree) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(tree.getLatlon().latitude, tree.getLatlon().longitude))
@@ -248,7 +250,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Intent i;
-                        switch(item.getItemId()) {
+                        switch (item.getItemId()) {
                             case R.id.nav_user_info:
                                 i = new Intent(MapsActivity.this, UserInfoActivity.class);
                                 startActivity(i);
