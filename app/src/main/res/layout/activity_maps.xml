@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/bottom_sheet_collapse_height"
                     android:layout_alignParentBottom="true"
-                    android:background="@android:color/holo_blue_dark"
+                    android:background="@color/colorPrimary"
                     android:onClick="onClick"
                     android:text="Chọn nhanh"
                     android:textSize="@dimen/sp_25" />
@@ -74,8 +74,9 @@
             <android.support.design.widget.CoordinatorLayout
                 android:id="@+id/bottom_sheet"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_300"
+                android:layout_height="@dimen/dp_400"
                 android:background="@android:color/white"
+                android:clickable="true"
                 android:clipToPadding="true"
                 android:fillViewport="true"
                 android:orientation="vertical"
@@ -88,6 +89,17 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/text_view_number_stopover"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/bottom_sheet_collapse_height"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="... diem dung"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/sp_25" />
+
                     <Button
                         android:id="@+id/button_calculate"
                         android:layout_width="match_parent"
@@ -95,7 +107,9 @@
                         android:layout_marginBottom="@dimen/dp_5"
                         android:background="@android:color/holo_green_light"
                         android:onClick="onClick"
-                        android:text="Tính toán"
+                        android:text="@string/start_spray"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/sp_25" />
 
                     <Button
@@ -105,7 +119,9 @@
                         android:layout_marginBottom="@dimen/dp_5"
                         android:background="@android:color/holo_red_light"
                         android:onClick="onClick"
-                        android:text="Hủy bỏ"
+                        android:text="@string/cancel"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/sp_25"
                         android:visibility="gone" />
 
@@ -117,6 +133,17 @@
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/sp_25"
                         android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/text_view_clear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:onClick="onClick"
+                        android:text="@string/clear"
+                        android:textColor="@android:color/holo_blue_light"
+                        android:textStyle="italic" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_stopovers"
