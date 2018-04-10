@@ -2,6 +2,7 @@ package com.example.tmd.hi_20172.activity.map;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,13 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     private List<StopOver> mList;
     private Context context;
 
-    public RouteAdapter(List<StopOver> list) {
+    public RouteAdapter(Context context, List<StopOver> list) {
+        this.context = context;
         mList = list;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
         View v = LayoutInflater.from(context).inflate(R.layout.item_stop_over, parent, false);
         return new ViewHolder(v);
     }
@@ -40,10 +41,16 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         holder.blindData(itemFriendSuggest);
     }
 
+
     @Override
     public int getItemCount() {
         if (mList != null) return mList.size();
         return 0;
+    }
+
+    public void updateList() {
+        notifyDataSetChanged();
+        ((MapsActivity) context).getTxtNumberStopover().setText(mList.size() + " điểm dừng");
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
