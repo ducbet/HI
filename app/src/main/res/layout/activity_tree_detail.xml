@@ -50,5 +50,21 @@
         android:gravity="center"
         android:text="Thong tin cay: "
         android:textSize="20sp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/edit_text_comment"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_comment"/>
+        <Button
+            android:id="@+id/button_send_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_send_comment"/>
+    </LinearLayout>
 
 </LinearLayout>
