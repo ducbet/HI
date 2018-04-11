@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
+import com.example.tmd.hi_20172.activity.history.HistoryActivity;
 import com.example.tmd.hi_20172.activity.LanguageActivity;
 import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.activity.UserInfoActivity;
@@ -251,6 +252,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // info window
             marker.setTag(water);
         }
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView = findViewById(R.id.recycler_view_stopovers);
+        routeAdapter = new RouteAdapter(this, tour);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(routeAdapter);
+    }
+
+
+    private void createNavigationView() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.left_drawer);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Intent i;
+                        switch (item.getItemId()) {
+                            case R.id.nav_user_info:
+                                i = new Intent(MapsActivity.this, UserInfoActivity.class);
+                                startActivity(i);
+                                break;
+                            case R.id.nav_language:
+                                i = new Intent(MapsActivity.this, LanguageActivity.class);
+                                startActivity(i);
+                                break;
+                            case R.id.nav_history:
+                                i = new Intent(MapsActivity.this, HistoryActivity.class);
+                                startActivity(i);
+                                break;
+                        }
+                        return true;
+                    }
+                }
+        );
         //
         setUpAutoCompleteTextView();
     }
@@ -297,13 +336,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void setUpRecyclerView() {
-        recyclerView = findViewById(R.id.recycler_view_stopovers);
-        routeAdapter = new RouteAdapter(this, tour);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(routeAdapter);
-    }
-
     private void setUpRecyclerViewHashTag() {
         recyclerViewHashTag = findViewById(R.id.recycler_view_hashtag);
         hashTagsAdapter = new HashTagsAdapter(this, keywords);
@@ -334,32 +366,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-    }
-
-    private void createNavigationView() {
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mNavigationView = findViewById(R.id.left_drawer);
-        mNavigationView.setNavigationItemSelectedListener(this);
-
-        mNavigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        Intent i;
-                        switch (item.getItemId()) {
-                            case R.id.nav_user_info:
-                                i = new Intent(MapsActivity.this, UserInfoActivity.class);
-                                startActivity(i);
-                                break;
-                            case R.id.nav_language:
-                                i = new Intent(MapsActivity.this, LanguageActivity.class);
-                                startActivity(i);
-                                break;
-                        }
-                        return true;
-                    }
-                }
-        );
     }
 
     protected synchronized void buildGoogleApiClient() {
