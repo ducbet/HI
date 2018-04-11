@@ -21,4 +21,8 @@
     <dimen name="dp_40">40dp</dimen>
     <dimen name="fab_margin_bottom">66dp</dimen>
     <dimen name="fab_margin_right">16dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="sp_7">7sp</dimen>
+    <dimen name="sp_10">10sp</dimen>
+    <dimen name="dp_2">2dp</dimen>
 </resources>

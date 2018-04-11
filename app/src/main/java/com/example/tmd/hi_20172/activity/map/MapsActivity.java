@@ -25,11 +25,15 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
+import com.example.tmd.hi_20172.activity.history.HistoryActivity;
 import com.example.tmd.hi_20172.activity.LanguageActivity;
 import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.activity.UserInfoActivity;
@@ -53,6 +57,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,13 +91,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Map<String, StopOver> stopovers = new HashMap();
     Map<String, Marker> markers = new HashMap<>();
     List<StopOver> tour = new ArrayList<>();
+    List<String> keywords = new ArrayList<>();
     private Button btnCalculate, btnCancel;
     private TextView txtRouteInfo, txtNumberStopover, txtQuickChoose;
     private FloatingActionButton fab;
+    private AutoCompleteTextView autocomplete;
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private View bottomSheet;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, recyclerViewHashTag;
     private RouteAdapter routeAdapter;
+    private HashTagsAdapter hashTagsAdapter;
     private boolean IS_SPRAYING = false;
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
@@ -128,7 +136,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         createBottomSheet();
         createNavigationView();
         setUpRecyclerView();
+        setUpRecyclerViewHashTag();
     }
+
 
     private boolean CheckGooglePlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
@@ -247,6 +257,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             water.setId(marker.getId());
             stopovers.put(marker.getId(), water);
             markers.put(marker.getId(), marker);
+            // info window
+            marker.setTag(water);
         }
     }
 
@@ -277,11 +289,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 i = new Intent(MapsActivity.this, LanguageActivity.class);
                                 startActivity(i);
                                 break;
+                            case R.id.nav_history:
+                                i = new Intent(MapsActivity.this, HistoryActivity.class);
+                                startActivity(i);
+                                break;
                         }
                         return true;
                     }
                 }
         );
+        //
+        setUpAutoCompleteTextView();
     }
 
     private void createBottomSheet() {
@@ -326,14 +344,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void enableButton(Button button) {
-        button.setTextColor(Color.BLACK);
-        button.setClickable(true);
+    private void setUpRecyclerViewHashTag() {
+        recyclerViewHashTag = findViewById(R.id.recycler_view_hashtag);
+        hashTagsAdapter = new HashTagsAdapter(this, keywords);
+        recyclerViewHashTag.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewHashTag.setAdapter(hashTagsAdapter);
     }
 
-    private void disableButton(Button button) {
-        button.setTextColor(Color.GRAY);
-        button.setClickable(false);
+    List<String> sourceAutoComplete;
+
+    private void setUpAutoCompleteTextView() {
+        autocomplete = findViewById(R.id.auto_complete_text_view);
+        // create source
+        sourceAutoComplete = new ArrayList<>();
+        for (StopOver stopOver : stopovers.values()) {
+            if (stopOver instanceof Tree) {
+                sourceAutoComplete.add(stopOver.getName());
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1, sourceAutoComplete.toArray(new String[sourceAutoComplete.size()]));
+        autocomplete.setAdapter(adapter);
+        autocomplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                keywords.add((String) adapterView.getItemAtPosition(i));
+                hashTagsAdapter.notifyDataSetChanged();
+                autocomplete.setText("");
+
+            }
+        });
     }
 
     protected synchronized void buildGoogleApiClient() {
