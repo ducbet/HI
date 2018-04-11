@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.example.tmd.hi_20172.activity.statistic.StatisticActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:layout_marginTop="@dimen/dp_10"
         android:descendantFocusability="blocksDescendants"
         android:orientation="vertical">
 
@@ -26,7 +26,7 @@
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
-                android:src="@mipmap/ic_previous" />
+                android:src="@drawable/ic_previous" />
 
             <TextView
                 android:id="@+id/text_view_statistic_month"
@@ -45,7 +45,7 @@
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
-                android:src="@mipmap/ic_next" />
+                android:src="@drawable/ic_next_gray" />
 
         </LinearLayout>
 
@@ -53,7 +53,7 @@
         <ImageView
             android:id="@+id/image_statistic"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_300"
+            android:layout_height="230dp"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
             android:src="@drawable/statistic" />
@@ -70,7 +70,7 @@
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
-                android:src="@mipmap/ic_previous" />
+                android:src="@drawable/ic_previous" />
 
             <TextView
                 android:layout_width="0dp"
@@ -79,7 +79,7 @@
                 android:layout_marginRight="@dimen/dp_10"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Ngày 12"
+                android:text="Ngày 11"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/sp_30" />
 
@@ -87,7 +87,7 @@
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
-                android:src="@mipmap/ic_next" />
+                android:src="@drawable/ic_next_black" />
 
         </LinearLayout>
 
