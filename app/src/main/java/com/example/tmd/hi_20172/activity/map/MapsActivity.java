@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
+import com.example.tmd.hi_20172.activity.history.HistoryActivity;
 import com.example.tmd.hi_20172.activity.LanguageActivity;
 import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.activity.UserInfoActivity;
@@ -267,6 +268,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 break;
                             case R.id.nav_language:
                                 i = new Intent(MapsActivity.this, LanguageActivity.class);
+                                startActivity(i);
+                                break;
+                            case R.id.nav_history:
+                                i = new Intent(MapsActivity.this, HistoryActivity.class);
                                 startActivity(i);
                                 break;
                         }

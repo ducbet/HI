@@ -25,5 +25,10 @@
     <string name="title_comment">Nhập phản hồi</string>
     <string name="title_send_comment">Gửi</string>
     <string name="sent_comment">Đã gửi phản hồi</string>
+    <string name="title_history">Lịch sử cá nhân</string>
+    <string name="provided_water">Đã tưới cây</string>
+    <string name="has_id">có id</string>
+    <string name="luong_nuoc">lượng nước</string>
+    <string name="ml">ml</string>
 
 </resources>
