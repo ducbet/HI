@@ -25,40 +25,57 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_5">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_search"
-                        android:focusableInTouchMode="true">
+                        android:layout_margin="@dimen/dp_5">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/text_search"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@android:color/transparent"
-                            android:hint="@string/search_here"
-                            android:maxLines="2"
-                            android:nextFocusLeft="@id/text_search"
-                            android:nextFocusUp="@id/text_search"
-                            android:paddingLeft="@dimen/dp_60"
-                            android:textCursorDrawable="@null" />
-                    </LinearLayout>
+                            android:background="@drawable/bg_search"
+                            android:focusableInTouchMode="true">
 
-                    <ImageView
-                        android:id="@+id/image_view_open_menu"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:onClick="onClick"
-                        android:padding="@dimen/dp_5"
-                        android:src="@mipmap/ic_open_menu" />
-                </RelativeLayout>
+                            <AutoCompleteTextView
+                                android:id="@+id/auto_complete_text_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@android:color/transparent"
+                                android:hint="@string/search_here"
+                                android:maxLines="2"
+                                android:nextFocusLeft="@id/auto_complete_text_view"
+                                android:nextFocusUp="@id/auto_complete_text_view"
+                                android:paddingLeft="@dimen/dp_60"
+                                android:textCursorDrawable="@null" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/image_view_open_menu"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:onClick="onClick"
+                            android:padding="@dimen/dp_5"
+                            android:src="@mipmap/ic_open_menu" />
+                    </RelativeLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_hashtag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_marginStart="@dimen/dp_5" />
+
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/text_view_quick_choose"
