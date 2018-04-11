@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
 import com.example.tmd.hi_20172.activity.LanguageActivity;
+import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.activity.UserInfoActivity;
 import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
@@ -66,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener {
+        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
     private static final String MARKER_WATER = "MARKER_WATER";
@@ -171,6 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnPolylineClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
         // TODO: 06/04/2018
         fakePosition();
@@ -197,7 +199,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // TODO: 06/04/2018
     private void addTrees() {
-        // TODO: 06/04/2018
+        // info window
+        CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);
+        // tree
         List<Tree> tempTree = new ArrayList<>();
         tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_01_do, "Rau muong", Tree.RED));
         tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_02_do, "Hoa hong", Tree.RED));
@@ -218,6 +223,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             tree.setId(marker.getId());
             stopovers.put(marker.getId(), tree);
             markers.put(marker.getId(), marker);
+            // info window
+            marker.setTag(tree);
         }
         // nguon nuoc
         List<Water> tempWater = new ArrayList<>();
@@ -430,6 +437,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mDrawerLayout.closeDrawer(Gravity.START);
         return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (marker.getTag() instanceof Tree) {
+            Intent intent = new Intent(this, TreeDetail.class);
+            intent.putExtra(TREE, (Tree) marker.getTag());
+            startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
+            marker.hideInfoWindow();
+        }
     }
 
     public class GetDirectionCallBack {
@@ -655,6 +672,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (marker.getTitle() != null && marker.getTitle().equals(MARKER_TREE) || marker.getTitle().equals(MARKER_WATER)) {
             StopOver stopOver = stopovers.get(marker.getId());
             handleStopoverClicked(stopOver);
+            marker.showInfoWindow();
         }
         return true;
     }
