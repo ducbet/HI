@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -66,12 +67,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener {
+        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
     private static final String MARKER_WATER = "MARKER_WATER";
     public static final String TREE = "TREE";
-    private static final int REQUEST_TREE_DETAIL_ACT = 15;
+    public static final int REQUEST_TREE_DETAIL_ACT = 15;
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -85,8 +86,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Map<String, StopOver> stopovers = new HashMap();
     Map<String, Marker> markers = new HashMap<>();
     List<StopOver> tour = new ArrayList<>();
-    private Button btnCalculate, btnCancel, btnQuickChoose;
-    private TextView txtRouteInfo, txtNumberStopover;
+    private Button btnCalculate, btnCancel;
+    private TextView txtRouteInfo, txtNumberStopover, txtQuickChoose;
+    private FloatingActionButton fab;
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private View bottomSheet;
     private RecyclerView recyclerView;
@@ -121,7 +123,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         txtNumberStopover = findViewById(R.id.text_view_number_stopover);
         btnCancel = findViewById(R.id.button_cancel);
         btnCalculate = findViewById(R.id.button_calculate);
-        btnQuickChoose = findViewById(R.id.button_quick_choose);
+        txtQuickChoose = findViewById(R.id.text_view_quick_choose);
+        fab = findViewById(R.id.fab);
         createBottomSheet();
         createNavigationView();
         setUpRecyclerView();
@@ -169,6 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnPolylineClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
         // TODO: 06/04/2018
         fakePosition();
@@ -195,7 +199,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // TODO: 06/04/2018
     private void addTrees() {
-        // TODO: 06/04/2018
+        // info window
+        CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);
+        // tree
         List<Tree> tempTree = new ArrayList<>();
         tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_01_do, "Rau muong", Tree.RED));
         tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_02_do, "Hoa hong", Tree.RED));
@@ -216,6 +223,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             tree.setId(marker.getId());
             stopovers.put(marker.getId(), tree);
             markers.put(marker.getId(), marker);
+            // info window
+            marker.setTag(tree);
         }
         // nguon nuoc
         List<Water> tempWater = new ArrayList<>();
@@ -276,18 +285,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        btnQuickChoose.setVisibility(View.GONE);
-                        disableButton(btnCalculate);
-                        disableButton(btnCancel);
+//                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        txtQuickChoose.setVisibility(View.GONE);
+//                        disableButton(btnCalculate);
+//                        disableButton(btnCancel);
+                        if (!IS_SPRAYING) {
+                            fab.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        btnQuickChoose.setVisibility(View.GONE);
+//                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        fab.setVisibility(View.GONE);
+//                        enableButton(btnCalculate);
+//                        enableButton(btnCancel);
+                        txtQuickChoose.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         if (tour.isEmpty()) {
-                            btnQuickChoose.setVisibility(View.VISIBLE);
+                            txtQuickChoose.setVisibility(View.VISIBLE);
                         } else {
                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         }
@@ -298,8 +313,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                enableButton(btnCalculate);
-                enableButton(btnCancel);
+
             }
         });
     }
@@ -323,6 +337,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mGoogleApiClient.connect();
     }
 
+    public void setSpraying(boolean boo) {
+        IS_SPRAYING = boo;
+        if (IS_SPRAYING) {
+            btnCalculate.setVisibility(View.GONE);
+            btnCancel.setVisibility(View.VISIBLE);
+            txtRouteInfo.setVisibility(View.VISIBLE);
+            txtNumberStopover.setBackgroundResource(R.drawable.bg_stopover_count_red);
+        } else {
+            btnCalculate.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.GONE);
+            txtRouteInfo.setVisibility(View.GONE);
+            txtNumberStopover.setBackgroundResource(R.drawable.bg_stopover_count_green);
+            for (List<Polyline> route : listRoutesPolylines) {
+                for (Polyline polyline1 : route) {
+                    polyline1.remove();
+                }
+            }
+        }
+
+    }
+
     public void onClick(View v) {
         Object dataTransfer[];
         switch (v.getId()) {
@@ -342,17 +377,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dataTransfer[1] = url;
                 dataTransfer[2] = new GetDirectionCallBack();
                 getDirectionsData.execute(dataTransfer);
-                IS_SPRAYING = true;
+                setSpraying(true);
+                fab.setVisibility(View.GONE);
                 break;
             case R.id.button_cancel:
-                isNotSpaying();
+                setSpraying(false);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
             case R.id.image_view_open_menu:
                 hideKeyboard();
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
-            case R.id.button_quick_choose:
+            case R.id.text_view_quick_choose:
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 for (StopOver stopOver : stopovers.values()) {
                     if (stopOver instanceof Tree && ((Tree) stopOver).getStatus() != Tree.GREEN) {
                         handleStopoverClicked(stopOver);
@@ -364,7 +401,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 routeAdapter.updateList();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 if (IS_SPRAYING) {
-                    isNotSpaying();
+                    setSpraying(false);
                 }
                 for (Marker marker : markers.values()) {
                     marker.setIcon(BitmapDescriptorFactory.fromResource(stopovers.get(marker.getId()).getIcon()));
@@ -372,6 +409,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             case R.id.text_view_number_stopover:
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                break;
+            case R.id.fab:
+                btnCalculate.performClick();
                 break;
         }
     }
@@ -399,17 +439,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (marker.getTag() instanceof Tree) {
+            Intent intent = new Intent(this, TreeDetail.class);
+            intent.putExtra(TREE, (Tree) marker.getTag());
+            startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
+            marker.hideInfoWindow();
+        }
+    }
+
     public class GetDirectionCallBack {
         public boolean success() {
-            spraying();
+            setSpraying(true);
             updateRouteInfo();
             return true;
         }
 
         public void updateRouteInfo() {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            String info = getResources().getString(R.string.distance) + routesInfo.get(0).get("distance") +
-                    "\n" + getResources().getString(R.string.time) + routesInfo.get(0).get("duration");
+            String info = "Khoảng cách ~ " + routesInfo.get(0).get("distance") +
+                    "\nThời gian đi ~ " + routesInfo.get(0).get("duration");
             txtRouteInfo.setText(info);
         }
     }
@@ -622,6 +672,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (marker.getTitle() != null && marker.getTitle().equals(MARKER_TREE) || marker.getTitle().equals(MARKER_WATER)) {
             StopOver stopOver = stopovers.get(marker.getId());
             handleStopoverClicked(stopOver);
+            marker.showInfoWindow();
         }
         return true;
     }
@@ -630,9 +681,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (stopOver != null) {
             stopOver.setChoose(!stopOver.isChoose());
             updateTour(stopOver);
-//            Intent intent = new Intent(this, TreeDetail.class);
-//            intent.putExtra(TREE, stopOver);
-//            startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
         }
     }
 
@@ -666,7 +714,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void checkTour() {
         // neu Tour != null thi hien nut de bat dau tuoi
         if (tour.isEmpty()) {
-            isNotSpaying();
+            setSpraying(false);
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         } else {
             if (IS_SPRAYING) {
@@ -676,24 +724,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         routeAdapter.updateList();
-    }
-
-    private void spraying() {
-        btnCalculate.setVisibility(View.GONE);
-        btnCancel.setVisibility(View.VISIBLE);
-        txtRouteInfo.setVisibility(View.VISIBLE);
-    }
-
-    private void isNotSpaying() {
-        IS_SPRAYING = false;
-        btnCalculate.setVisibility(View.VISIBLE);
-        btnCancel.setVisibility(View.GONE);
-        txtRouteInfo.setVisibility(View.GONE);
-        for (List<Polyline> route : listRoutesPolylines) {
-            for (Polyline polyline1 : route) {
-                polyline1.remove();
-            }
-        }
     }
 
     @Override
@@ -712,8 +742,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         polyline2.setPattern(null);
                     }
                     // update tour info
-                    String info = "Khoảng cách ~ " + routesInfo.get(i).get("distance") +
-                            "\nThời gian ~ " + routesInfo.get(i).get("duration");
+                    String info = "Khoảng cách ~ " + routesInfo.get(0).get("distance") +
+                            "\nThời gian đi ~ " + routesInfo.get(0).get("duration");
                     txtRouteInfo.setText(info);
                     return;
                 }

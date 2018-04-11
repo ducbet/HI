@@ -19,8 +19,11 @@
     <string name="language_en">English</string>
     <string name="start_spray">Bắt đầu tưới</string>
     <string name="cancel">Dừng tưới</string>
-    <string name="distance">Khoảng cách ~</string>
-    <string name="time">Thời gian đi ~</string>
+    <string name="distance">Khoảng cách ~ </string>
+    <string name="time">Thời gian đi ~ </string>
     <string name="clear">Xóa tất cả</string>
+    <string name="title_comment">Nhập phản hồi</string>
+    <string name="title_send_comment">Gửi</string>
+    <string name="sent_comment">Đã gửi phản hồi</string>
 
 </resources>
