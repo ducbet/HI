@@ -13,6 +13,16 @@
         android:descendantFocusability="blocksDescendants"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:gravity="center"
+            android:text="Cây phượng"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/sp_30"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +48,7 @@
                 android:gravity="center"
                 android:text="Tháng 4/2018"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/sp_30" />
+                android:textSize="@dimen/sp_25" />
 
             <ImageView
                 android:id="@+id/image_next"
@@ -81,7 +91,7 @@
                 android:gravity="center"
                 android:text="Ngày 11"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/sp_30" />
+                android:textSize="@dimen/sp_25" />
 
             <ImageView
                 android:layout_width="@dimen/dp_50"

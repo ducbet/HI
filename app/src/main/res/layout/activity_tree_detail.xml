@@ -11,69 +11,102 @@
         android:id="@+id/image_view_tree_image"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:scaleType="fitXY"
         android:src="@drawable/bg_gradient" />
 
     <TextView
-        android:textStyle="bold"
-        android:textColor="@color/colorAccent"
-        android:layout_marginTop="@dimen/dp_20"
         android:id="@+id/text_view_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
         android:gravity="center"
         android:text="Ten cay"
-        android:textSize="30sp" />
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_20">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="left"
-            android:text="Tình trạng cây: "
-            android:textSize="20sp" />
+            android:gravity="center"
+            android:text="200 ml"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/sp_25" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5" />
+
+
+        <TextView
+            android:id="@+id/text_view_spray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Tưới"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="@dimen/sp_25" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5" />
 
         <ImageView
-            android:id="@+id/image_view_choose"
-            android:layout_width="70dp"
+            android:id="@+id/image_view_open_statistic_act"
+            android:layout_width="0dp"
             android:layout_height="70dp"
-            android:onClick="onClick" />
+            android:layout_weight="1"
+            android:src="@drawable/ic_graph" />
     </LinearLayout>
 
     <TextView
-        android:layout_margin="@dimen/dp_20"
         android:id="@+id/text_view_how_to_water"
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_20"
         android:layout_weight="1"
         android:gravity="left"
         android:text="Cach tuoi cay: "
+        android:textColor="@android:color/black"
         android:textSize="20sp" />
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <EditText
-            android:layout_marginLeft="@dimen/dp_8"
             android:id="@+id/edit_text_comment"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/title_comment"/>
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_weight="1"
+            android:hint="@string/title_comment" />
+
         <Button
-            android:layout_marginRight="@dimen/dp_8"
             android:id="@+id/button_send_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_send_comment"/>
+            android:layout_marginRight="@dimen/dp_8"
+            android:text="@string/title_send_comment" />
     </LinearLayout>
 
 </LinearLayout>

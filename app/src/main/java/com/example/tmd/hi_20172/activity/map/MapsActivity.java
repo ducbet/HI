@@ -96,6 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView txtRouteInfo, txtNumberStopover, txtQuickChoose;
     private FloatingActionButton fab;
     private AutoCompleteTextView autocomplete;
+    private List<String> sourceAutoComplete;
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private View bottomSheet;
     private RecyclerView recyclerView, recyclerViewHashTag;
@@ -329,6 +330,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     case BottomSheetBehavior.STATE_HIDDEN:
                         if (tour.isEmpty()) {
                             txtQuickChoose.setVisibility(View.VISIBLE);
+                            fab.setVisibility(View.GONE);
                         } else {
                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         }
@@ -351,7 +353,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         recyclerViewHashTag.setAdapter(hashTagsAdapter);
     }
 
-    List<String> sourceAutoComplete;
 
     private void setUpAutoCompleteTextView() {
         autocomplete = findViewById(R.id.auto_complete_text_view);
@@ -362,6 +363,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 sourceAutoComplete.add(stopOver.getName());
             }
         }
+        Log.e("MY_TAG", "setUpAutoCompleteTextView: " + sourceAutoComplete.size());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, sourceAutoComplete.toArray(new String[sourceAutoComplete.size()]));
         autocomplete.setAdapter(adapter);
