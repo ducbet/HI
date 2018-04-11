@@ -20,7 +20,6 @@
         <activity android:name=".activity.map.MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter> <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,9 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.TreeDetail">
-
         </activity>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -40,7 +37,6 @@
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.LanguageActivity" />
         <activity android:name=".activity.statistic.StatisticActivity">
-
         </activity>
     </application>
 

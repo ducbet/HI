@@ -22,9 +22,10 @@ public class TreeDetail extends AppCompatActivity implements View.OnClickListene
 
     private Tree tree;
     private TextView txtName;
-    private ImageView imgChoose;
+    private ImageView imgChoose, imgTree;
     private Button btnSendComment;
     private EditText editTextComment;
+    private TextView txtHowToWater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,12 @@ public class TreeDetail extends AppCompatActivity implements View.OnClickListene
     private void getControl() {
         txtName = (TextView) findViewById(R.id.text_view_name);
         imgChoose = (ImageView) findViewById(R.id.image_view_choose);
+        imgTree = (ImageView) findViewById(R.id.image_view_tree_image);
         imgChoose.setOnClickListener(this);
         btnSendComment = findViewById(R.id.button_send_comment);
         btnSendComment.setOnClickListener(this);
         editTextComment = findViewById(R.id.edit_text_comment);
+        txtHowToWater = (TextView)findViewById(R.id.text_view_how_to_water);
     }
 
     public void getTreeId() {
@@ -51,6 +54,8 @@ public class TreeDetail extends AppCompatActivity implements View.OnClickListene
             return;
         }
         txtName.setText(tree.getName());
+        txtHowToWater.setText("Cách tưới: " +tree.getHowToWater());
+        imgTree.setImageResource(tree.getImage());
 //        Toast.makeText(this, "" + tree.isChoose(), Toast.LENGTH_SHORT).show();
         if (tree.isChoose()) {
             imgChoose.setImageResource(R.mipmap.ic_checked);

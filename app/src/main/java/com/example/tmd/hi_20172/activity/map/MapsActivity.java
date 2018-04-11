@@ -204,17 +204,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setInfoWindowAdapter(customInfoWindow);
         // tree
         List<Tree> tempTree = new ArrayList<>();
-        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_01_do, "Rau muong", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_02_do, "Hoa hong", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_03_xa, "Cai cuc", Tree.GREEN));
-        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_04_va, "Cay bang", Tree.YELLOW));
-        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_05_xa, "Hoa dam but", Tree.GREEN));
-        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_06_do, "Cay phuong", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_07_do, "Cay da", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_08_xa, "Cay buoi", Tree.GREEN));
-        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_09_do, "Hoa loa ken", Tree.RED));
-        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_10_va, "Cay chanh", Tree.YELLOW));
-        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_11_do, "Cay gao", Tree.RED));
+        tempTree.add(new Tree(new LatLng(21.004730, 105.844619), R.mipmap.ic_01_do, "Rau muống", Tree.RED, R.drawable.rau_muong,  "Tưới đều xung quanh gốc, chú ý không tưới quá mạnh tay."));
+        tempTree.add(new Tree(new LatLng(21.004433, 105.846986), R.mipmap.ic_02_do, "Hoa hồng", Tree.RED, R.drawable.hoa_hong,"Tưới bằng bình chuyên dụng, có vòi hoa sen xung quanh gốc, trnahs tưới vào lá làm nát lá."));
+        tempTree.add(new Tree(new LatLng(21.007478, 105.847441), R.mipmap.ic_03_xa, "Cải cúc", Tree.GREEN, R.drawable.cai_cuc, "Tưới nhẹ tay từ trên xuống, để nước bao trùm quanh cây"));
+        tempTree.add(new Tree(new LatLng(21.006916, 105.842095), R.mipmap.ic_04_va, "Cây bàng", Tree.YELLOW, R.drawable.caybang, "Tưới nhiều vào gốc cây, cần tưới cxung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.007312, 105.843096), R.mipmap.ic_05_xa, "Hoa dâm bụt", Tree.GREEN, R.drawable.hoa_dam_but,  "Tưới đều xung quanh gốc, chú ý không tưới quá mạnh tay"));
+        tempTree.add(new Tree(new LatLng(21.004701, 105.842026), R.mipmap.ic_06_do, "Cây phượng", Tree.RED, R.drawable.cay_phuong,  "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.003840, 105.841967), R.mipmap.ic_07_do, "Cây đa", Tree.RED, R.drawable.cay_da, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.003700, 105.843545), R.mipmap.ic_08_xa, "Cây bưởi", Tree.GREEN, R.drawable.cay_buoi, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_09_do, "Hoa loa kèn", Tree.RED, R.drawable.hoa_loa_ken, "Tưới nhẹ nhàng, dùng bình tưới chuyên dụng, nhẹ tay tránh để nát hoa."));
+        tempTree.add(new Tree(new LatLng(21.005520, 105.852976), R.mipmap.ic_10_va, "Cây chanh", Tree.YELLOW, R.drawable.cay_chanh,  "Tưới tập trung vào gốc cây và lá cây, tốt nhất là vào buổi sáng để cây hấp thụ ánh sáng mặt trời."));
+        tempTree.add(new Tree(new LatLng(21.015181, 105.847832), R.mipmap.ic_11_do, "Cây gạo", Tree.RED, R.drawable.cay_gao,  "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
         for (Tree tree : tempTree) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(tree.getLatlon().latitude, tree.getLatlon().longitude))
