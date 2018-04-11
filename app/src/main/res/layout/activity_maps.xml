@@ -47,7 +47,7 @@
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@android:color/transparent"
                                 android:hint="@string/search_here"
-                                android:maxLines="2"
+                                android:maxLines="1"
                                 android:nextFocusLeft="@id/auto_complete_text_view"
                                 android:nextFocusUp="@id/auto_complete_text_view"
                                 android:paddingLeft="@dimen/dp_60"
@@ -73,9 +73,7 @@
                         android:layout_marginLeft="@dimen/dp_5"
                         android:layout_marginRight="@dimen/dp_5"
                         android:layout_marginStart="@dimen/dp_5" />
-
                 </LinearLayout>
-
 
                 <TextView
                     android:id="@+id/text_view_quick_choose"
