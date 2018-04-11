@@ -1,6 +1,7 @@
 package com.example.tmd.hi_20172.activity.map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tmd.hi_20172.R;
+import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.tmd.hi_20172.activity.map.MapsActivity.REQUEST_TREE_DETAIL_ACT;
+import static com.example.tmd.hi_20172.activity.map.MapsActivity.TREE;
 
 /**
  * Created by thanh.tv on 8/7/2017.
@@ -61,6 +66,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             super(itemView);
             txtName = itemView.findViewById(R.id.text_view_stop_over_name);
             itemView.findViewById(R.id.image_view_remove_stopover).setOnClickListener(this);
+            itemView.findViewById(R.id.image_view_show_detail).setOnClickListener(this);
         }
 
         public void blindData(StopOver stopOver) {
@@ -70,8 +76,17 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            mStopOver.setChoose(!mStopOver.isChoose());
-            ((MapsActivity) context).updateTour(mStopOver);
+            switch (view.getId()) {
+                case R.id.image_view_remove_stopover:
+                    mStopOver.setChoose(!mStopOver.isChoose());
+                    ((MapsActivity) context).updateTour(mStopOver);
+                    break;
+                case R.id.image_view_show_detail:
+                    Intent intent = new Intent(context, TreeDetail.class);
+                    intent.putExtra(TREE, mStopOver);
+                    ((MapsActivity) context).startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
+                    break;
+            }
         }
     }
 }
