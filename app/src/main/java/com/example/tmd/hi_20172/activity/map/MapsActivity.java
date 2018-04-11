@@ -71,7 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String MARKER_TREE = "MARKER_TREE";
     private static final String MARKER_WATER = "MARKER_WATER";
     public static final String TREE = "TREE";
-    private static final int REQUEST_TREE_DETAIL_ACT = 15;
+    public static final int REQUEST_TREE_DETAIL_ACT = 15;
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -663,9 +663,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (stopOver != null) {
             stopOver.setChoose(!stopOver.isChoose());
             updateTour(stopOver);
-//            Intent intent = new Intent(this, TreeDetail.class);
-//            intent.putExtra(TREE, stopOver);
-//            startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
         }
     }
 
