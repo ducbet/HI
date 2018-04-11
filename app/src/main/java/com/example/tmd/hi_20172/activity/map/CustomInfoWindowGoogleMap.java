@@ -26,15 +26,15 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
-        return null;
-    }
-
-    @Override
-    public View getInfoContents(Marker marker) {
         View view = ((Activity) context).getLayoutInflater().inflate(R.layout.info_tree, null);
         stopOver = (StopOver) marker.getTag();
         TextView txtName = view.findViewById(R.id.text_view_info_tree_name);
         txtName.setText(stopOver.getName());
         return view;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
     }
 }

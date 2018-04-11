@@ -2,23 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_infowindow"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_10">
 
     <TextView
         android:id="@+id/text_view_info_tree_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:singleLine="false"
+        android:text="asdaasdasdads"
         android:textColor="@android:color/black"
         android:textSize="@dimen/sp_20" />
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:layout_marginStart="@dimen/dp_5"
-        android:padding="@dimen/dp_5"
-        android:src="@drawable/ic_eye" />
+    <!--<ImageView-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:layout_marginLeft="@dimen/dp_5"-->
+    <!--android:layout_marginStart="@dimen/dp_5"-->
+    <!--android:padding="@dimen/dp_5"-->
+    <!--android:src="@drawable/ic_eye" />-->
 </LinearLayout>
