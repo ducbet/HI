@@ -17,18 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
-        <activity android:name=".activity.map.MapsActivity">
-
-        </activity>
-        <activity android:name=".activity.TreeDetail">
-
-        </activity>
+        <activity android:name=".activity.map.MapsActivity"></activity>
+        <activity android:name=".activity.TreeDetail"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -37,8 +33,15 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.LanguageActivity" />
-        <activity android:name=".activity.statistic.StatisticActivity"></activity>
-        <activity android:name=".activity.history.HistoryActivity"></activity>
+        <activity android:name=".activity.statistic.StatisticActivity" />
+        <activity android:name=".activity.history.HistoryActivity" />
+        <activity android:name=".activity.SprayTree">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

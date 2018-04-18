@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.SprayTree">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_150"
+        android:background="@android:color/holo_green_dark"
+        android:scaleType="centerCrop"
+        android:src="@drawable/caybang" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/dp_8"
+            android:text="@string/tree_name"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_25" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_8"
+            android:text="Cây bàng"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/sp_25"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/dp_8"
+            android:text="@string/tree_status"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_25" />
+
+        <TextView
+            android:id="@+id/text_view_thieu_nuoc"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/dp_8"
+            android:text="40%"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/sp_30"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/dp_8"
+            android:text="Lượng nước cần tưới"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_25" />
+
+        <TextView
+            android:id="@+id/text_view_nuoc_can_tuoi"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/dp_8"
+            android:text="500ml"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/sp_30"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/dp_8"
+            android:text="Nước còn trong bình"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_25" />
+
+        <TextView
+            android:id="@+id/text_view_nuoc_con_lai"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/dp_8"
+            android:text="3000ml"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/sp_30"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_tuoi_nuoc"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dp_5"
+        android:layout_weight="1"
+        android:background="@android:color/holo_blue_light"
+        android:text="Bắt đầu tưới"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_40"
+        android:textStyle="bold" />
+
+
+</LinearLayout>
