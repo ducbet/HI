@@ -30,5 +30,7 @@
     <string name="has_id">có id</string>
     <string name="luong_nuoc">lượng nước</string>
     <string name="ml">ml</string>
+    <string name="tree_name">Tên cây</string>
+    <string name="tree_status">Mức độ thiếu nước</string>
 
 </resources>
