@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tmd.hi_20172.R;
+import com.example.tmd.hi_20172.activity.SprayTree;
 import com.example.tmd.hi_20172.activity.history.HistoryActivity;
 import com.example.tmd.hi_20172.activity.LanguageActivity;
 import com.example.tmd.hi_20172.activity.TreeDetail;
@@ -72,10 +73,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnPolylineClickListener, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerDragListener {
 
     private static final String MARKER_TREE = "MARKER_TREE";
     private static final String MARKER_WATER = "MARKER_WATER";
+    private static final String MARKKER_CURRENT_POSITION = "MARKKER_CURRENT_POSITION";
     public static final String TREE = "TREE";
     public static final int REQUEST_TREE_DETAIL_ACT = 15;
     private GoogleMap mMap;
@@ -182,6 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMarkerDragListener(this);
         mMap.setOnPolylineClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
@@ -199,9 +202,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(latitude, longitude);// Bach Khoa
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
-                .title("Current Position")
+                .title(MARKKER_CURRENT_POSITION)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow))
                 .rotation(45)
+                .draggable(true)
                 .anchor(0.5f, 0.5f);
         mCurrLocationMarker = mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -503,6 +507,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        if (marker.getTitle() != null && marker.getTitle().equals(MARKKER_CURRENT_POSITION)){
+            Toast.makeText(this, "Giả sử người dùng đến gần cây thì màn hình tưới cây tương ứng hiện lên", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Giả sử người dùng đến gần cây thì màn hình tưới cây tương ứng hiện lên", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, SprayTree.class);
+            startActivity(intent);
+        }
+    }
+
     public class GetDirectionCallBack {
         public boolean success() {
             setSpraying(true);
@@ -620,7 +643,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        MarkerOptions markerOptions = new MarkerOptions();
 //        markerOptions.position(latLng);
 //        markerOptions.draggable(true);
-//        markerOptions.title("Current Position");
+//        markerOptions.title(MARKKER_CURRENT_POSITION);
 //        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow));
 //        markerOptions.anchor(0.5f, 0.5f);
 //        if (location.hasBearing()) {
