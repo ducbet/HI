@@ -53,7 +53,7 @@ public class TreeDetail extends AppCompatActivity implements View.OnClickListene
             return;
         }
         txtName.setText(tree.getName());
-        txtHowToWater.setText("Cách tưới: " + tree.getHowToWater());
+        txtHowToWater.setText("Cách tưới:\n" + tree.getHowToWater());
         imgTree.setImageResource(tree.getImage());
         if (tree.isChoose()) {
             txtSpray.setText("Bỏ tưới");

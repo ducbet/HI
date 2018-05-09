@@ -186,7 +186,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(this);
 
         // TODO: 06/04/2018
-//        fakePosition();
+        fakePosition();
         addTrees();
 
     }
@@ -226,14 +226,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tempTree.add(new Tree(new LatLng(21.006808, 105.845926), R.mipmap.ic_09_do, "Hoa loa kèn", Tree.RED, R.drawable.hoa_loa_ken, "Tưới nhẹ nhàng, dùng bình tưới chuyên dụng, nhẹ tay tránh để nát hoa."));
         tempTree.add(new Tree(new LatLng(21.005130, 105.846101), R.mipmap.ic_11_ca, "Cây chanh", Tree.YELLOW, R.drawable.cay_chanh, "Tưới tập trung vào gốc cây và lá cây, tốt nhất là vào buổi sáng để cây hấp thụ ánh sáng mặt trời."));
         tempTree.add(new Tree(new LatLng(21.011250, 105.844249), R.mipmap.ic_11_do, "Cây gạo", Tree.RED, R.drawable.cay_gao, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
-        tempTree.add(new Tree(new LatLng(21.005924, 105.846553), R.mipmap.ic_12_ca, "Cây gạo", Tree.RED, R.drawable.cay_gao, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
-        tempTree.add(new Tree(new LatLng(21.006298, 105.845296), R.mipmap.ic_13_x, "Cây bàng", Tree.RED, R.drawable.caybang, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.005924, 105.846553), R.mipmap.ic_12_ca, "Cây gạo", Tree.YELLOW, R.drawable.cay_gao, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.006298, 105.845296), R.mipmap.ic_13_x, "Cây bàng", Tree.GREEN, R.drawable.caybang, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
         tempTree.add(new Tree(new LatLng(21.008228, 105.841807), R.mipmap.ic_14_do, "Cây phượng", Tree.RED, R.drawable.cay_phuong, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
-        tempTree.add(new Tree(new LatLng(21.009360, 105.845306), R.mipmap.ic_15_x, "Hoa hồng", Tree.RED, R.drawable.hoa_hong, "Tưới bằng bình chuyên dụng, có vòi hoa sen xung quanh gốc, trnahs tưới vào lá làm nát lá."));
-        tempTree.add(new Tree(new LatLng(21.009641, 105.841498), R.mipmap.ic_16_ca, "Hoa loa kèn", Tree.RED, R.drawable.hoa_loa_ken, "Tưới nhẹ nhàng, dùng bình tưới chuyên dụng, nhẹ tay tránh để nát hoa."));
-        tempTree.add(new Tree(new LatLng(21.009468, 105.841728), R.mipmap.ic_17_x, "Cây đa", Tree.RED, R.drawable.cay_da, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
-        tempTree.add(new Tree(new LatLng(21.010814, 105.842599), R.mipmap.ic_18_do, "Cây chanh", Tree.YELLOW, R.drawable.cay_chanh, "Tưới tập trung vào gốc cây và lá cây, tốt nhất là vào buổi sáng để cây hấp thụ ánh sáng mặt trời."));
-        tempTree.add(new Tree(new LatLng(21.006508, 105.842535), R.mipmap.ic_19_ca, "Cải cúc", Tree.GREEN, R.drawable.cai_cuc, "Tưới nhẹ tay từ trên xuống, để nước bao trùm quanh cây"));
+        tempTree.add(new Tree(new LatLng(21.009360, 105.845306), R.mipmap.ic_15_x, "Hoa hồng", Tree.GREEN, R.drawable.hoa_hong, "Tưới bằng bình chuyên dụng, có vòi hoa sen xung quanh gốc, trnahs tưới vào lá làm nát lá."));
+        tempTree.add(new Tree(new LatLng(21.009641, 105.841498), R.mipmap.ic_16_ca, "Hoa loa kèn", Tree.YELLOW, R.drawable.hoa_loa_ken, "Tưới nhẹ nhàng, dùng bình tưới chuyên dụng, nhẹ tay tránh để nát hoa."));
+        tempTree.add(new Tree(new LatLng(21.009468, 105.841728), R.mipmap.ic_17_x, "Cây đa", Tree.GREEN, R.drawable.cay_da, "Tưới nhiều vào gốc cây, cần tưới xung quanh gốc, tưới vào buổi sáng sáng sớm là tốt nhất."));
+        tempTree.add(new Tree(new LatLng(21.010814, 105.842599), R.mipmap.ic_18_do, "Cây chanh", Tree.RED, R.drawable.cay_chanh, "Tưới tập trung vào gốc cây và lá cây, tốt nhất là vào buổi sáng để cây hấp thụ ánh sáng mặt trời."));
+        tempTree.add(new Tree(new LatLng(21.006508, 105.842535), R.mipmap.ic_19_ca, "Cải cúc", Tree.YELLOW, R.drawable.cai_cuc, "Tưới nhẹ tay từ trên xuống, để nước bao trùm quanh cây"));
         for (Tree tree : tempTree) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(tree.getLatlon().latitude, tree.getLatlon().longitude))
@@ -250,6 +250,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tempWater.add(new Water(new LatLng(21.006394, 105.843622), R.mipmap.ic_water, "Nguồn nước"));
         tempWater.add(new Water(new LatLng(21.006597, 105.845587), R.mipmap.ic_water, "Nguồn nước"));
         tempWater.add(new Water(new LatLng(21.003798, 105.844516), R.mipmap.ic_water, "Nguồn nước"));
+        tempWater.add(new Water(new LatLng(21.002908, 105.842154), R.mipmap.ic_water, "Nguồn nước"));
+        tempWater.add(new Water(new LatLng(21.004320, 105.842806), R.mipmap.ic_water, "Nguồn nước"));
         for (Water water : tempWater) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(water.getLatlon().latitude, water.getLatlon().longitude))
@@ -261,6 +263,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // info window
             marker.setTag(water);
         }
+        //
+        Log.e("MY_TAG", "addTrees, stopovers: " + stopovers.size());
+        setUpAutoCompleteTextView();
     }
 
     private void setUpRecyclerView() {
@@ -275,7 +280,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.left_drawer);
         mNavigationView.setNavigationItemSelectedListener(this);
-
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -299,8 +303,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
         );
-        //
-        setUpAutoCompleteTextView();
+
     }
 
     private void createBottomSheet() {
@@ -359,10 +362,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // create source
         sourceAutoComplete = new ArrayList<>();
         for (StopOver stopOver : stopovers.values()) {
-            if (stopOver instanceof Tree) {
+            if (stopOver instanceof Tree && !sourceAutoComplete.contains(stopOver.getName())) {
                 sourceAutoComplete.add(stopOver.getName());
             }
         }
+        Log.e("MY_TAG", "stopovers: " + stopovers.size());
         Log.e("MY_TAG", "setUpAutoCompleteTextView: " + sourceAutoComplete.size());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, sourceAutoComplete.toArray(new String[sourceAutoComplete.size()]));
@@ -602,38 +606,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        // TODO: 06/04/2018
-        mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.draggable(true);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow));
-        markerOptions.anchor(0.5f, 0.5f);
-        if (location.hasBearing()) {
-            markerOptions.rotation(location.getBearing());
-        } else {
-            markerOptions.rotation(45);
-        }
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
-
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-        //stop location updates
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            Log.d("onLocationChanged", "Removing Location Updates");
-        }
+//        // TODO: 06/04/2018
+//        mLastLocation = location;
+//        if (mCurrLocationMarker != null) {
+//            mCurrLocationMarker.remove();
+//        }
+//
+//        latitude = location.getLatitude();
+//        longitude = location.getLongitude();
+//
+//
+//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        markerOptions.draggable(true);
+//        markerOptions.title("Current Position");
+//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_arrow));
+//        markerOptions.anchor(0.5f, 0.5f);
+//        if (location.hasBearing()) {
+//            markerOptions.rotation(location.getBearing());
+//        } else {
+//            markerOptions.rotation(45);
+//        }
+//        mCurrLocationMarker = mMap.addMarker(markerOptions);
+//
+//        //move map camera
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+//        //stop location updates
+//        if (mGoogleApiClient != null) {
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//            Log.d("onLocationChanged", "Removing Location Updates");
+//        }
     }
 
     @Override

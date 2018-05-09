@@ -2,6 +2,7 @@ package com.example.tmd.hi_20172.activity.map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.example.tmd.hi_20172.R;
 import com.example.tmd.hi_20172.activity.TreeDetail;
 import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
+import com.example.tmd.hi_20172.model.Water;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +63,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private StopOver mStopOver;
         private TextView txtName;
+        private CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             txtName = itemView.findViewById(R.id.text_view_stop_over_name);
+            cardView = itemView.findViewById(R.id.card_view_item_list);
             itemView.findViewById(R.id.image_view_remove_stopover).setOnClickListener(this);
             itemView.findViewById(R.id.image_view_show_detail).setOnClickListener(this);
         }
@@ -72,6 +76,17 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         public void blindData(StopOver stopOver) {
             mStopOver = stopOver;
             txtName.setText(stopOver.getName());
+            if (stopOver instanceof Water) {
+                cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorBlue));
+            } else {
+                if (((Tree) stopOver).getStatus() == Tree.RED) {
+                    cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorRed));
+                } else if (((Tree) stopOver).getStatus() == Tree.YELLOW) {
+                    cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorYellow));
+                } else if (((Tree) stopOver).getStatus() == Tree.GREEN) {
+                    cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorGreen));
+                }
+            }
         }
 
         @Override
