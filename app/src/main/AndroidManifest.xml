@@ -35,6 +35,7 @@
         <activity android:name=".activity.LanguageActivity" />
         <activity android:name=".activity.statistic.StatisticActivity" />
         <activity android:name=".activity.history.HistoryActivity" />
+        <activity android:name=".activity.GuideActivity" />
         <activity android:name=".activity.SprayTree">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->

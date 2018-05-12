@@ -16,5 +16,10 @@
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_history"
             />
+        <item
+            android:title="Hướng dẫn sử dụng"
+            android:id="@+id/nav_guide"
+            android:icon="@drawable/ic_guide"
+            />
     </group>
 </menu>

@@ -32,5 +32,10 @@
     <string name="ml">ml</string>
     <string name="tree_name">Tên cây</string>
     <string name="tree_status">Mức độ thiếu nước</string>
+    <string name="title_guide">Hướng dẫn sử dụng</string>
+    <string name="title_guide_1">- Để tưới nhanh chọn vào biểu tượng chọn nhanh trên màn hình, hệ thống sẽ tự động chọn cây, số lượng cây,  nguồn nước và gợi ý đường đi. </string>
+    <string name="title_guide_2">- Nếu muốn tự mình tưới, vui lòng chọn vào biểu tượng cây muốn tưới, sau đó ấn vào chữ "1 điểm dừng" hoặc chọn vào biểu tượng chỉ đường ở góc trái màn hình, hệ thống sẽ gợi ý đường đi đến nguồn nước và đến cây đã chọn.</string>
+    <string name="title_guide_3">- Có thể chọn nhiều cây trong 1 lần tưới. </string>
+    <string name="title_guide_4">- Để xem thông tin chi tiết cây, vui lòng chọn cây, khi đó ở phía trên cây đã chọn hiện button tên cây, click vào button đó thông tin chi tiết cây sẽ hiện ra.</string>
 
 </resources>
