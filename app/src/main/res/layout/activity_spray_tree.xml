@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.SprayTree">
+    tools:context=".activity.SprayTreeActivity">
 
     <ImageView
+        android:id="@+id/image_view_tree_image_spray"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_150"
         android:background="@android:color/holo_green_dark"
@@ -32,6 +33,7 @@
             android:textSize="@dimen/sp_25" />
 
         <TextView
+            android:id="@+id/text_view_name_tree"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

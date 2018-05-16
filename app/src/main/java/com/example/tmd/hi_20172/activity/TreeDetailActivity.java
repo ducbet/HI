@@ -17,7 +17,7 @@ import com.example.tmd.hi_20172.model.Tree;
 
 import static com.example.tmd.hi_20172.activity.map.MapsActivity.TREE;
 
-public class TreeDetail extends AppCompatActivity implements View.OnClickListener {
+public class TreeDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Tree tree;
     private TextView txtName, txtSpray;
@@ -31,7 +31,7 @@ public class TreeDetail extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tree_detail);
         getControl();
-        getTreeId();
+        getTree();
     }
 
     private void getControl() {
@@ -46,7 +46,7 @@ public class TreeDetail extends AppCompatActivity implements View.OnClickListene
         findViewById(R.id.image_view_open_statistic_act).setOnClickListener(this);
     }
 
-    public void getTreeId() {
+    public void getTree() {
         Intent intent = getIntent();
         tree = intent.getParcelableExtra(TREE);
         if (tree == null) {
