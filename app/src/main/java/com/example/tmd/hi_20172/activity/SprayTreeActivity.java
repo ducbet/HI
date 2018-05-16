@@ -76,7 +76,7 @@ public class SprayTreeActivity extends AppCompatActivity {
                 textViewThieuNuoc.setTextColor(getResources().getColor(R.color.colorAccent));
                 textViewNuocCanTuoi.setTextColor(getResources().getColor(R.color.colorAccent));
                 btnTuoiNuoc.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
-                btnTuoiNuoc.setText("Đã uống đủ nước");
+                btnTuoiNuoc.setText("Đã đủ nước");
 
                 tree.setStatus(Tree.GREEN);
                 tree.setIcon(Tree.GREEN);
@@ -84,7 +84,8 @@ public class SprayTreeActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", tree);
                 setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+//                finish();
+                btnTuoiNuoc.setClickable(false);
             }
         });
     }
