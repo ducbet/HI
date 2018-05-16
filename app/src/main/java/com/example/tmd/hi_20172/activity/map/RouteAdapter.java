@@ -4,22 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tmd.hi_20172.R;
-import com.example.tmd.hi_20172.activity.TreeDetail;
+import com.example.tmd.hi_20172.activity.TreeDetailActivity;
 import com.example.tmd.hi_20172.model.StopOver;
 import com.example.tmd.hi_20172.model.Tree;
 import com.example.tmd.hi_20172.model.Water;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.tmd.hi_20172.activity.map.MapsActivity.REQUEST_TREE_DETAIL_ACT;
 import static com.example.tmd.hi_20172.activity.map.MapsActivity.TREE;
@@ -97,7 +93,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                     ((MapsActivity) context).updateTour(mStopOver);
                     break;
                 case R.id.image_view_show_detail:
-                    Intent intent = new Intent(context, TreeDetail.class);
+                    Intent intent = new Intent(context, TreeDetailActivity.class);
                     intent.putExtra(TREE, mStopOver);
                     ((MapsActivity) context).startActivityForResult(intent, REQUEST_TREE_DETAIL_ACT);
                     break;

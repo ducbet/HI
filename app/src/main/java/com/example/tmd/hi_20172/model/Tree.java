@@ -6,6 +6,9 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tmd on 06/04/2018.
  */
@@ -18,12 +21,14 @@ public class Tree extends StopOver implements Parcelable {
     private int status;
     private int image;
     private String howToWater;
+    private int[] array_icon;
 
-    public Tree(LatLng latlon, int icon, String name, int status, int image, String howToWater) {
-        super(latlon, icon, name);
+    public Tree(LatLng latlon, int[] array_icon, String name, int status, int image, String howToWater) {
+        super(latlon, array_icon[status], name);
         this.status = status;
         this.image = image;
         this.howToWater = howToWater;
+        this.array_icon = array_icon;
     }
 
     protected Tree(Parcel in) {
@@ -31,6 +36,7 @@ public class Tree extends StopOver implements Parcelable {
         status = in.readInt();
         image = in.readInt();
         howToWater = in.readString();
+        array_icon = in.createIntArray();
     }
 
     @Override
@@ -39,6 +45,7 @@ public class Tree extends StopOver implements Parcelable {
         dest.writeInt(status);
         dest.writeInt(image);
         dest.writeString(howToWater);
+        dest.writeIntArray(array_icon);
     }
 
     public static final Creator<Tree> CREATOR = new Creator<Tree>() {
@@ -52,11 +59,6 @@ public class Tree extends StopOver implements Parcelable {
             return new Tree[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
     public int getImage() {
         return image;
@@ -80,5 +82,20 @@ public class Tree extends StopOver implements Parcelable {
 
     public void setHowToWater(String howToWater) {
         this.howToWater = howToWater;
+    }
+
+    @Override
+    public void setIcon(int status) {
+        super.setIcon(array_icon[status]);
+    }
+
+    @Override
+    public int getIcon() {
+        return array_icon[status];
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }
