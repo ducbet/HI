@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
@@ -374,6 +375,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 sourceAutoComplete.add(stopOver.getName());
             }
         }
+        sourceAutoComplete.add("Nguồn nước");
 //        Log.e("MY_TAG", "stopovers: " + stopovers.size());
 //        Log.e("MY_TAG", "setUpAutoCompleteTextView: " + sourceAutoComplete.size());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
@@ -385,9 +387,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 keywords.add((String) adapterView.getItemAtPosition(i));
                 hashTagsAdapter.notifyDataSetChanged();
                 autocomplete.setText("");
-
+                filterTree();
             }
         });
+    }
+
+    public void filterTree() {
+        if (keywords.size() > 0) {
+            for (Marker marker : markers.values()) {
+//                Log.e("MY_TAG", "filterTree: " + ((StopOver) marker.getTag()).getName());
+                if (keywords.contains(((StopOver) marker.getTag()).getName())) {
+//                    Log.e("MY_TAG", "filterTree: ---" + ((StopOver) marker.getTag()).getName());
+                    marker.setVisible(true);
+                } else {
+                    marker.setVisible(false);
+                }
+            }
+        } else {
+            for (Marker marker : markers.values()) {
+                marker.setVisible(true);
+            }
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
