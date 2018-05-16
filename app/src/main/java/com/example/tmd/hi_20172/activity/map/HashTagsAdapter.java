@@ -63,6 +63,7 @@ public class HashTagsAdapter extends RecyclerView.Adapter<HashTagsAdapter.ViewHo
                 case R.id.text_view_hashtag:
                     mList.remove(string);
                     notifyDataSetChanged();
+                    ((MapsActivity) context).filterTree();
                     break;
             }
         }
